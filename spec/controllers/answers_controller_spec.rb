@@ -2,13 +2,14 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:answer) { create(:answer) }
+  let(:question) { create(:question) }
 
   describe 'GET #index' do
-    before { get :index }
+    before { get :index, params: {question_id: question} }
 
     it 'populates an array of all answers' do
       answers = create_list(:answer, 2)
-      expect(assigns(:answers)).to eq answers
+      expect(assigns(:answers)).to match_array(answers)
     end
 
     it 'renders index view' do
@@ -29,7 +30,7 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'GET #new' do
-    before { get :new }
+    before { get :new, params: {question_id: question} }
 
     it 'assigns a new Answer to @answer' do
       expect(assigns(:answer)).to be_a_new(Answer)
@@ -57,22 +58,22 @@ RSpec.describe AnswersController, type: :controller do
       let(:question) { create(:question) }
 
       it 'saves the new answer to database' do
-        expect { post :create, params: { answer: attributes_for(:answer).merge(question_id: question.id) }}.to change(Answer, :count).by(1)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) }}.to change(Answer, :count).by(1)
       end
 
       it 'redirects to show view' do
-        post :create, params: { answer: attributes_for(:answer).merge(question_id: question.id) }
+        post :create, params: { question_id: question, answer: attributes_for(:answer) }
         expect(response).to redirect_to answer_path(assigns(:answer))
       end
     end
 
     context 'with invalid attributes' do
       it 'does not save the answer' do
-        expect { post :create, params: { answer: attributes_for(:invalid_answer).merge(question_id: nil) }}.to_not change(Answer, :count)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:invalid_answer) }}.to_not change(Answer, :count)
       end
 
       it 're-renders new view' do
-        post :create, params: { answer: attributes_for(:invalid_answer).merge(question_id: nil) }
+        post :create, params: { question_id: question, answer: attributes_for(:invalid_answer) }
         expect(response).to render_template :new
       end
     end
@@ -116,12 +117,12 @@ RSpec.describe AnswersController, type: :controller do
   describe 'DELETE #destroy' do
     it 'deletes answer' do
       answer
-      expect {delete :destroy, params: {id: answer}}.to change(Answer, :count).by(-1)
+      expect {delete :destroy, params: {question_id: question, id: answer}}.to change(Answer, :count).by(-1)
     end
 
     it 'redirects to index view' do
-      delete :destroy, params: {id: answer}
-      expect(response).to redirect_to answers_path
+      delete :destroy, params: {question_id: question, id: answer}
+      expect(response).to redirect_to question_answers_path(question)
     end
   end
 

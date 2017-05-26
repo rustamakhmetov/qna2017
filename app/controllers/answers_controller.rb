@@ -1,5 +1,6 @@
 class AnswersController < ApplicationController
   before_action :load_answer, only: [:show, :edit, :update, :destroy]
+  before_action :load_question, only: [:create, :destroy]
 
   def index
     @answers = Answer.all
@@ -17,6 +18,7 @@ class AnswersController < ApplicationController
 
   def create
     @answer = Answer.new(answer_params)
+    @answer.question = @question
     if @answer.save
       redirect_to @answer
     else
@@ -34,13 +36,17 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer.destroy
-    redirect_to answers_path
+    redirect_to question_answers_path(@question)
   end
 
   private
 
   def load_answer
     @answer = Answer.find(params[:id])
+  end
+
+  def load_question
+    @question = Question.find_by_id(params[:question_id])
   end
 
   def answer_params
