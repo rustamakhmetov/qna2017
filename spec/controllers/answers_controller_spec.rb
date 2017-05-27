@@ -58,7 +58,7 @@ RSpec.describe AnswersController, type: :controller do
       let(:question) { create(:question) }
 
       it 'saves the new answer to database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) }}.to change(Answer, :count).by(1)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) }}.to change(question.answers, :count).by(1)
       end
 
       it 'redirects to show view' do
@@ -89,7 +89,6 @@ RSpec.describe AnswersController, type: :controller do
       it 'change answer attributes' do
         patch :update, params: {id: answer, answer: {body: 'Body new'}}
         answer.reload
-        #expect(answer.question).to eq question
         expect(answer.body).to eq 'Body new'
       end
 
@@ -117,12 +116,12 @@ RSpec.describe AnswersController, type: :controller do
   describe 'DELETE #destroy' do
     it 'deletes answer' do
       answer
-      expect {delete :destroy, params: {question_id: question, id: answer}}.to change(Answer, :count).by(-1)
+      expect {delete :destroy, params: {id: answer}}.to change(Answer, :count).by(-1)
     end
 
     it 'redirects to index view' do
-      delete :destroy, params: {question_id: question, id: answer}
-      expect(response).to redirect_to question_answers_path(question)
+      delete :destroy, params: {id: answer}
+      expect(response).to redirect_to question_answers_path(answer.question_id)
     end
   end
 
