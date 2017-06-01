@@ -18,7 +18,7 @@ class AnswersController < ApplicationController
   end
 
   def create
-    @answer = @question.answers.new(answer_params)
+    @answer = @question.answers.new(answer_params.merge(user: current_user))
     if @answer.save
       redirect_to @question, notice: "Ответ успешно добавлен"
     else
@@ -37,7 +37,7 @@ class AnswersController < ApplicationController
 
   def destroy
     @answer.destroy
-    redirect_to question_answers_path(@answer.question_id)
+    redirect_to question_path(@answer.question_id), notice: "Ответ успешно удален."
   end
 
   private

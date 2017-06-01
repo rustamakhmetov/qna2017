@@ -5,11 +5,16 @@ p
 p
   ' Body:
   = @question.body
+- if current_user && current_user.author_of?(@question)
+  p
+    = link_to 'Delete question', @question, method: :delete
 
 p
   | Answers:
   - @question.answers.each do |answer|
     p= answer.body
+    - if current_user && current_user.author_of?(answer)
+      p= link_to "Delete answer #{answer.id}", answer_path(answer), method: :delete
 
 = form_for [@question, @answer] do |f|
   p
