@@ -1,4 +1,5 @@
 class AnswersController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :load_answer, only: [:show, :edit, :update, :destroy]
   before_action :load_question, only: [:new, :index, :create]
 
@@ -19,9 +20,10 @@ class AnswersController < ApplicationController
   def create
     @answer = @question.answers.new(answer_params)
     if @answer.save
-      redirect_to @answer
+      redirect_to @question, notice: "Ответ успешно добавлен"
     else
-      render :new
+      flash_message :notice, @answer.errors.full_messages
+      render 'questions/show'
     end
   end
 
