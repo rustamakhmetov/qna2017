@@ -12,11 +12,10 @@ p
 p
   | Answers:
   - @question.answers.each do |answer|
-    p= answer.body
-    - if current_user && current_user.author_of?(answer)
-      p= link_to "Delete answer #{answer.id}", answer_path(answer), method: :delete
+    = render answer
 
 = form_for [@question, @answer] do |f|
+  = render 'shared/form_error', object: f.object
   p
     =f.label :body
     =f.text_area :body
