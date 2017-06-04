@@ -125,9 +125,14 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'DELETE #destroy' do
     sign_in_user
 
-    it 'deletes question' do
-      question
+    it 'Только автор вопроса может его удалить' do
+      question = create(:question, user: @user)
       expect {delete :destroy, params: {id: question}}.to change(Question, :count).by(-1)
+    end
+
+    it 'Нельзя удалять вопросы другого пользователя' do
+      question1 = create(:question, user: create(:user))
+      expect {delete :destroy, params: {id: question1}}.to_not change(Question, :count)
     end
 
     it 'redirects to index view' do
