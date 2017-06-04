@@ -6,13 +6,8 @@ feature 'Create questions and answers', %q{
   I want to be able to ask questions and create answers
 } do
 
-  given(:user) do
-    create(:user)
-  end
-
-  given(:question) do
-    create(:question)
-  end
+  given(:user) { create(:user) }
+  given(:question) { create(:question) }
 
   scenario 'Authenticated user create question' do
     sign_in(user)

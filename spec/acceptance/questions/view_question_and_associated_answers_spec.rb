@@ -5,10 +5,8 @@ feature "View question and associated answers", %q{
   As an user
   I want to be able to view the question and answers to it
 } do
-  given(:user) do
-    create(:user)
-  end
 
+  given(:user) { create(:user) }
   let(:question) { create(:question_with_answers) }
 
   scenario 'Authenticated user can view question and associated answers' do

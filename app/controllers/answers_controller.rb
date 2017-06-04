@@ -1,7 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :load_answer, only: [:show, :edit, :update, :destroy]
-  before_action :load_question, only: [:new, :index, :create]
+  before_action :load_answer, only: [:edit, :update, :destroy]
+  before_action :load_question, only: [:create]
 
   def edit
   end

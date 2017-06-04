@@ -6,13 +6,8 @@ feature 'Removal of the author questions and answers', %q{
   I want to be able to remove my questions and answers
 } do
 
-  given(:user) do
-    create(:user)
-  end
-
-  given(:question) do
-    create(:question_with_answers, user: user)
-  end
+  given(:user) { create(:user) }
+  given(:question) { create(:question_with_answers, user: user) }
 
   scenario 'Authenticated author delete your question' do
     sign_in(user)
