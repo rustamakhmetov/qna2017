@@ -85,9 +85,14 @@ RSpec.describe AnswersController, type: :controller do
   describe 'DELETE #destroy' do
     sign_in_user
 
-    it 'deletes answer' do
-      answer
+    it 'deletes answer of author' do
+      answer = create(:answer, user: @user)
       expect {delete :destroy, params: {id: answer}}.to change(Answer, :count).by(-1)
+    end
+
+    it 'Нельзя удалять ответы чужого пользователя' do
+      answer1 = create(:answer, user: create(:user), question: answer.question)
+      expect {delete :destroy, params: {id: answer1}}.to_not change(Answer, :count)
     end
 
     it 'redirects to question view' do
