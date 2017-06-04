@@ -25,6 +25,19 @@ feature "User can write an answer to a question", %q{
     expect(page).to have_content 'text text'
   end
 
+  scenario 'Залогиненный пользователь пишет невалидный ответ на вопрос' do
+    sign_in(user)
+
+    visit question_path(question)
+    expect(page).to have_content question.title
+    expect(page).to have_content question.body
+
+    fill_in 'Body', with: ''
+    click_on 'Ask answer'
+
+    expect(page).to have_content 'Body can\'t be blank'
+  end
+
   scenario 'Non-authenticated user can not answer to question' do
     visit question_path(question)
     click_on 'Ask answer'

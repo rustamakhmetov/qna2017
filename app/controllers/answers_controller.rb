@@ -11,7 +11,7 @@ class AnswersController < ApplicationController
     if @answer.save
       redirect_to @question, notice: "Ответ успешно добавлен"
     else
-      flash_message :notice, @answer.errors.full_messages
+      flash_message :notice, @answer.errors.full_messages.join("<br>")
       render 'questions/show'
     end
   end
@@ -20,7 +20,7 @@ class AnswersController < ApplicationController
     if @answer.update(answer_params)
       redirect_to @answer
     else
-      render :edit
+      render :edit, notice: @answer.errors.full_messages.join("<br>")
     end
   end
 
