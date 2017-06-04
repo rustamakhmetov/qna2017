@@ -69,9 +69,10 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid attributes' do
       it 'does not change answer attributes' do
+        body = answer.body
         patch :update, params: {id: answer, answer: attributes_for(:invalid_answer).merge(question_id: nil)}
         answer.reload
-        expect(answer.body).to eq 'MyString'
+        expect(answer.body).to eq body
         expect(answer.question).to_not eq nil
       end
 
