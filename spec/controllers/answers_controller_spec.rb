@@ -25,7 +25,12 @@ RSpec.describe AnswersController, type: :controller do
       let(:question) { create(:question) }
 
       it 'saves the new answer to database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) }}.to change(question.answers, :count).by(1)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(question.answers, :count).by(1)
+      end
+
+      it 'current user link to the new answer' do
+        post 'create', params: { question_id: question, answer: attributes_for(:answer) }
+        expect(assigns("answer").user).to eq @user
       end
 
       it 'redirects to show view' do

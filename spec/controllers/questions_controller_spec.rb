@@ -64,6 +64,11 @@ RSpec.describe QuestionsController, type: :controller do
         expect { post :create, params: { question: attributes_for(:question) }}.to change(Question, :count).by(1)
       end
 
+      it 'current user link to the new question' do
+        post 'create', params: { question: attributes_for(:question) }
+        expect(assigns("question").user).to eq @user
+      end
+
       it 'redirects to show view' do
         post :create, params: { question: attributes_for(:question) }
         expect(response).to redirect_to question_path(assigns(:question))
