@@ -42,7 +42,7 @@ class QuestionsController < ApplicationController
     else
       message = "Вы не можете удалять чужие вопросы."
     end
-      redirect_to questions_path, notice: message
+    redirect_to questions_path, notice: message
   end
 
   private
