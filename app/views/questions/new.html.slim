@@ -1,0 +1,10 @@
+=form_for @question do |f|
+  = render 'shared/form_error', object: f.object
+  p
+    =f.label :title
+    =f.text_field :title
+  p
+    =f.label :body
+    =f.text_area :body
+  p
+    =f.submit "Create"

@@ -4,44 +4,9 @@ RSpec.describe AnswersController, type: :controller do
   let(:answer) { create(:answer) }
   let(:question) { create(:question) }
 
-  describe 'GET #index' do
-    before { get :index, params: {question_id: question} }
-
-    it 'populates an array of all answers' do
-      answers = create_list(:answer, 2)
-      expect(assigns(:answers)).to match_array(answers)
-    end
-
-    it 'renders index view' do
-      expect(response).to render_template :index
-    end
-  end
-
-  describe 'GET #show' do
-    before { get :show, params: {id: answer} }
-
-    it 'assigns the requested answer to @answer' do
-      expect(assigns(:answer)).to eq answer
-    end
-
-    it 'renders show view' do
-      expect(response).to render_template :show
-    end
-  end
-
-  describe 'GET #new' do
-    before { get :new, params: {question_id: question} }
-
-    it 'assigns a new Answer to @answer' do
-      expect(assigns(:answer)).to be_a_new(Answer)
-    end
-
-    it 'renders new view' do
-      expect(response).to render_template :new
-    end
-  end
-
   describe 'GET #edit' do
+    sign_in_user
+
     before { get :edit, params: {id: answer} }
 
     it 'assigns the requested answer to @answer' do
@@ -54,16 +19,23 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'POST #create' do
+    sign_in_user
+
     context 'with valid attributes' do
       let(:question) { create(:question) }
 
       it 'saves the new answer to database' do
-        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) }}.to change(question.answers, :count).by(1)
+        expect { post :create, params: { question_id: question, answer: attributes_for(:answer) } }.to change(question.answers, :count).by(1)
+      end
+
+      it 'current user link to the new answer' do
+        post 'create', params: { question_id: question, answer: attributes_for(:answer) }
+        expect(assigns("answer").user).to eq @user
       end
 
       it 'redirects to show view' do
         post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(response).to redirect_to answer_path(assigns(:answer))
+        expect(response).to redirect_to question_path(question)
       end
     end
 
@@ -74,12 +46,14 @@ RSpec.describe AnswersController, type: :controller do
 
       it 're-renders new view' do
         post :create, params: { question_id: question, answer: attributes_for(:invalid_answer) }
-        expect(response).to render_template :new
+        expect(response).to render_template 'questions/show'
       end
     end
   end
 
   describe 'PATCH #update' do
+    sign_in_user
+
     context 'with valid attributes' do
       it 'assigns the requested answer to @answer' do
         patch :update, params: {id: answer, answer: {body: 'Body new'}}
@@ -100,9 +74,10 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with invalid attributes' do
       it 'does not change answer attributes' do
+        body = answer.body
         patch :update, params: {id: answer, answer: attributes_for(:invalid_answer).merge(question_id: nil)}
         answer.reload
-        expect(answer.body).to eq 'MyString'
+        expect(answer.body).to eq body
         expect(answer.question).to_not eq nil
       end
 
@@ -114,14 +89,21 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    it 'deletes answer' do
-      answer
+    sign_in_user
+
+    it 'deletes answer of author' do
+      answer = create(:answer, user: @user)
       expect {delete :destroy, params: {id: answer}}.to change(Answer, :count).by(-1)
     end
 
-    it 'redirects to index view' do
+    it 'user can not delete answer of other author' do
+      answer1 = create(:answer, user: create(:user), question: answer.question)
+      expect {delete :destroy, params: {id: answer1}}.to_not change(Answer, :count)
+    end
+
+    it 'redirects to question view' do
       delete :destroy, params: {id: answer}
-      expect(response).to redirect_to question_answers_path(answer.question_id)
+      expect(response).to redirect_to question_path(answer.question_id)
     end
   end
 

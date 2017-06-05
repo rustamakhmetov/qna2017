@@ -1,27 +1,17 @@
 class AnswersController < ApplicationController
-  before_action :load_answer, only: [:show, :edit, :update, :destroy]
-  before_action :load_question, only: [:new, :index, :create]
-
-  def index
-    @answers = Answer.all
-  end
-
-  def show
-  end
-
-  def new
-    @answer = Answer.new
-  end
+  before_action :authenticate_user!
+  before_action :load_answer, only: [:edit, :update, :destroy]
+  before_action :load_question, only: [:create]
 
   def edit
   end
 
   def create
-    @answer = @question.answers.new(answer_params)
+    @answer = @question.answers.new(answer_params.merge(user: current_user))
     if @answer.save
-      redirect_to @answer
+      redirect_to @question, notice: "Ответ успешно добавлен"
     else
-      render :new
+      render 'questions/show'
     end
   end
 
@@ -34,8 +24,13 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    @answer.destroy
-    redirect_to question_answers_path(@answer.question_id)
+    if current_user.author_of?(@answer)
+      @answer.destroy!
+      message = "Ответ успешно удален."
+    else
+      message = "Вы не можете удалять чужие ответы."
+    end
+    redirect_to question_path(@answer.question_id), notice: message
   end
 
   private
