@@ -20,8 +20,7 @@ class QuestionsController < ApplicationController
   def create
     @question = Question.new(question_params.merge(user: current_user))
     if @question.save
-      flash[:notice] = "Your question successfully created."
-      redirect_to @question
+      redirect_to @question, notice: "Your question successfully created."
     else
       render :new
     end
@@ -37,7 +36,7 @@ class QuestionsController < ApplicationController
 
   def destroy
     if current_user.author_of?(@question)
-      @question.destroy
+      @question.destroy!
       message = "Вопрос успешно удален."
     else
       message = "Вы не можете удалять чужие вопросы."

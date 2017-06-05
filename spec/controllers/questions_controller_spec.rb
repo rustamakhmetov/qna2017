@@ -130,12 +130,12 @@ RSpec.describe QuestionsController, type: :controller do
   describe 'DELETE #destroy' do
     sign_in_user
 
-    it 'Только автор вопроса может его удалить' do
+    it 'only author can be delete question' do
       question = create(:question, user: @user)
       expect {delete :destroy, params: {id: question}}.to change(Question, :count).by(-1)
     end
 
-    it 'Нельзя удалять вопросы другого пользователя' do
+    it 'user can not delete question of other author' do
       question1 = create(:question, user: create(:user))
       expect {delete :destroy, params: {id: question1}}.to_not change(Question, :count)
     end

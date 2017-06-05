@@ -96,7 +96,7 @@ RSpec.describe AnswersController, type: :controller do
       expect {delete :destroy, params: {id: answer}}.to change(Answer, :count).by(-1)
     end
 
-    it 'Нельзя удалять ответы чужого пользователя' do
+    it 'user can not delete answer of other author' do
       answer1 = create(:answer, user: create(:user), question: answer.question)
       expect {delete :destroy, params: {id: answer1}}.to_not change(Answer, :count)
     end
