@@ -1,3 +1,9 @@
+javascript:
+    $(document).ajaxError(function (e, xhr, settings) {
+        if (xhr.status == 401) {
+            $('#flash_messages').html(xhr.responseText);
+        }
+    });
 p
   ' Title:
   = @question.title
@@ -9,12 +15,13 @@ p
   p
     = link_to 'Delete question', @question, method: :delete
 
-p
-  | Answers:
-  - @question.answers.each do |answer|
-    = render answer
+.answers
+  p
+    | Answers:
+    - @question.answers.each do |answer|
+      = render answer
 
-= form_for [@question, @answer] do |f|
+= form_for [@question, @answer], remote: true do |f|
   = render 'shared/form_error', object: f.object
   p
     =f.label :body

@@ -40,6 +40,7 @@ gem 'slim-rails'
 gem 'devise'
 gem 'devise-i18n-views'
 gem 'jquery-turbolinks'
+gem 'jquery-rails'
 #gem 'carrierwave'
 #gem 'remotipart'
 #gem "cocoon"
@@ -53,6 +54,7 @@ group :development, :test do
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '~> 2.13'
   gem 'selenium-webdriver'
+  gem 'database_cleaner'
 end
 
 group :development do

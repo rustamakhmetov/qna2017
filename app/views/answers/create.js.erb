@@ -1,0 +1,6 @@
+<%= render 'layouts/flash_messages' %>
+
+<% if @answer.errors.empty? %>
+  $('.answers').append('<%= j render @answer %>');
+  $("#answer_body").val("");
+<% end %>
