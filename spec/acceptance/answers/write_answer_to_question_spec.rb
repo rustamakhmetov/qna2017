@@ -7,14 +7,12 @@ feature "User can write an answer to a question", %q{
 } do
 
   given(:user) { create(:user) }
-
-  let(:question) { create(:question) }
+  given(:question) { create(:question) }
 
   scenario 'Authenticated user answer to question', js: true do
     sign_in(user)
 
     visit question_path(question)
-    #save_and_open_page
     expect(page).to have_content question.title
     expect(page).to have_content question.body
 
