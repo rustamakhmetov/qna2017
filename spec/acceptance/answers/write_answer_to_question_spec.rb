@@ -10,7 +10,7 @@ feature "User can write an answer to a question", %q{
 
   let(:question) { create(:question) }
 
-  scenario 'Authenticated user answer to question' do
+  scenario 'Authenticated user answer to question', js: true do
     sign_in(user)
 
     visit question_path(question)
@@ -20,12 +20,13 @@ feature "User can write an answer to a question", %q{
 
     fill_in 'Body', with: 'text text'
     click_on 'Ask answer'
+    wait_for_ajax
 
     expect(page).to have_content 'Ответ успешно добавлен'
     expect(page).to have_content 'text text'
   end
 
-  scenario 'Залогиненный пользователь пишет невалидный ответ на вопрос' do
+  scenario 'Authenticated user to be fill answer invalid data', js: true do
     sign_in(user)
 
     visit question_path(question)
@@ -34,13 +35,15 @@ feature "User can write an answer to a question", %q{
 
     fill_in 'Body', with: ''
     click_on 'Ask answer'
+    wait_for_ajax
 
     expect(page).to have_content 'Body can\'t be blank'
   end
 
-  scenario 'Non-authenticated user can not answer to question' do
+  scenario 'Non-authenticated user can not answer to question', js: true do
     visit question_path(question)
     click_on 'Ask answer'
+    wait_for_ajax
 
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
