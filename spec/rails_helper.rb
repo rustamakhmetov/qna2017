@@ -31,6 +31,7 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.extend ControllerMacros, type: :controller
   config.include AcceptanceHelper, type: :feature
+  config.include WaitForAjax, type: :feature
   config.filter_run focus: true
   config.run_all_when_everything_filtered = true
 
