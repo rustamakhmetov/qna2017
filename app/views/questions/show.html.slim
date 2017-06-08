@@ -4,16 +4,30 @@ javascript:
             $('#flash_messages').html(xhr.responseText);
         }
     });
-p
-  ' Title:
-  = @question.title
 
-p
-  ' Body:
-  = @question.body
-- if current_user&.author_of?(@question)
+.question
   p
-    = link_to 'Delete question', @question, method: :delete
+    ' Title:
+    = @question.title
+
+  p
+    ' Body:
+    = @question.body
+  - if current_user&.author_of?(@question)
+    =form_for @question, html: {id: "edit_question_#{@question.id}"}, remote: true do |f|
+      = render 'shared/form_error', object: f.object
+      p
+        =f.label :title
+        =f.text_field :title
+      p
+        =f.label :body
+        =f.text_area :body
+      p
+        =f.submit "Save"
+    p
+      = link_to 'Edit', '', class: "edit-question-link", data: {question_id: @question.id}
+    p
+      = link_to 'Delete question', @question, method: :delete
 
 .answers
   p
