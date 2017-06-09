@@ -23,11 +23,10 @@ class AnswersController < ApplicationController
   def destroy
     if current_user.author_of?(@answer)
       @answer.destroy!
-      message = "Ответ успешно удален."
+      flash_message :success, "Ответ успешно удален."
     else
-      message = "Вы не можете удалять чужие ответы."
+      flash_message :error, "Вы не можете удалять чужие ответы."
     end
-    redirect_to question_path(@answer.question_id), notice: message
   end
 
   private
