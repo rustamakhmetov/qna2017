@@ -4,20 +4,6 @@ RSpec.describe AnswersController, type: :controller do
   let(:answer) { create(:answer) }
   let(:question) { create(:question) }
 
-  describe 'GET #edit' do
-    sign_in_user
-
-    before { get :edit, params: {id: answer} }
-
-    it 'assigns the requested answer to @answer' do
-      expect(assigns(:answer)).to eq answer
-    end
-
-    it 'renders edit view' do
-      expect(response).to render_template :edit
-    end
-  end
-
   describe 'POST #create' do
     sign_in_user
 
@@ -56,34 +42,34 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'with valid attributes' do
       it 'assigns the requested answer to @answer' do
-        patch :update, params: {id: answer, answer: {body: 'Body new'}}
+        patch :update, params: {id: answer, answer: {body: 'Body new'}, format: :js}
         expect(assigns(:answer)).to eq answer
       end
 
       it 'change answer attributes' do
-        patch :update, params: {id: answer, answer: {body: 'Body new'}}
+        patch :update, params: {id: answer, answer: {body: 'Body new'}, format: :js}
         answer.reload
         expect(answer.body).to eq 'Body new'
       end
 
-      it 'redirects to the updated answer' do
-        patch :update, params: {id: answer, answer: {body: 'Body new'}}
-        expect(response).to redirect_to answer
+      it 'render updated template' do
+        patch :update, params: {id: answer, answer: {body: 'Body new'}, format: :js}
+        expect(response).to render_template :update
       end
     end
 
     context 'with invalid attributes' do
       it 'does not change answer attributes' do
         body = answer.body
-        patch :update, params: {id: answer, answer: attributes_for(:invalid_answer).merge(question_id: nil)}
+        patch :update, params: {id: answer, answer: attributes_for(:invalid_answer).merge(question_id: nil), format: :js}
         answer.reload
         expect(answer.body).to eq body
         expect(answer.question).to_not eq nil
       end
 
-      it 're-renders edit view' do
-        patch :update, params: {id: answer, answer: attributes_for(:invalid_answer).merge(question_id: nil)}
-        expect(response).to render_template :edit
+      it 'render updated template' do
+        patch :update, params: {id: answer, answer: attributes_for(:invalid_answer).merge(question_id: nil), format: :js}
+        expect(response).to render_template :update
       end
     end
   end

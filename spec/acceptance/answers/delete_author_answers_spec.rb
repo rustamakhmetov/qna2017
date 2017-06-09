@@ -14,11 +14,13 @@ feature 'Removal of the author answers', %q{
 
     qpath = question_path(question)
     visit qpath
-    answer_anchor = "Delete answer #{question.answers.first.id}"
-    click_on answer_anchor
+    answer_css = "#answer#{question.answers.first.id}"
+    within answer_css do
+      click_on "Delete"
+    end
     expect(page).to have_content 'Ответ успешно удален.'
     expect(current_path).to eq qpath
-    expect(page).to_not have_link(answer_anchor)
+    expect(page).to_not have_selector(answer_css)
   end
 
   scenario 'Authenticated author can not delete other answer' do

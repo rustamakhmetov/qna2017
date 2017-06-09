@@ -1,4 +1,15 @@
 - if answer.persisted?
-  p= answer.body
-  - if current_user&.author_of?(answer)
-    p= link_to "Delete answer #{answer.id}", answer_path(answer), method: :delete
+  div id="answer#{answer.id}"
+    p= answer.body
+    - if current_user&.author_of?(answer)
+      = form_for answer, method: :patch, remote: true do |f|
+        = render 'shared/form_error', object: f.object
+        p
+          = f.label :body
+          = f.text_area :body
+        p
+          = f.submit 'Save'
+      p
+        = link_to "Edit", '', class: "edit-answer-link", data: {answer_id: answer.id}
+        | &nbsp;
+        = link_to "Delete", answer_path(answer), method: :delete

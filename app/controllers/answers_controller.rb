@@ -1,10 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :load_answer, only: [:edit, :update, :destroy]
+  before_action :load_answer, only: [:update, :destroy]
   before_action :load_question, only: [:create]
-
-  def edit
-  end
 
   def create
     @answer = @question.answers.new(answer_params.merge(user: current_user))
@@ -17,9 +14,9 @@ class AnswersController < ApplicationController
 
   def update
     if @answer.update(answer_params)
-      redirect_to @answer
+      flash_message :success, "Ответ успешно обновлен"
     else
-      render :edit
+      errors_to_flash @answer
     end
   end
 
