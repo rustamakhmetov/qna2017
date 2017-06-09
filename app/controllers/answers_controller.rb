@@ -1,6 +1,6 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :load_answer, only: [:update, :destroy]
+  before_action :load_answer, only: [:update, :destroy, :accept]
   before_action :load_question, only: [:create]
 
   def create
@@ -26,6 +26,15 @@ class AnswersController < ApplicationController
       flash_message :success, "Ответ успешно удален."
     else
       flash_message :error, "Вы не можете удалять чужие ответы."
+    end
+  end
+
+  def accept
+    if current_user.author_of?(@answer.question)
+      @answer.accept!
+      flash_message :success, "Ответ успешно принят."
+    else
+      flash_message :error, "Только автор вопроса может выполнить принятие ответа."
     end
   end
 

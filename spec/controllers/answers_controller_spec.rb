@@ -93,4 +93,78 @@ RSpec.describe AnswersController, type: :controller do
     end
   end
 
+  describe 'PATCH #accept' do
+    sign_in_user
+
+    context "Author of question" do
+      let!(:question) { create(:question, user: @user) }
+      let!(:answer) { create(:answer, question: question) }
+
+      it 'assigns the requested answer to @answer' do
+        patch :accept, params: {id: answer, format: :js}
+        expect(assigns(:answer)).to eq answer
+      end
+
+      it 'change answer accept attribute' do
+        expect(answer.accept).to eq false
+        patch :accept, params: {id: answer, format: :js}
+        answer.reload
+        expect(answer.accept).to eq true
+      end
+
+      it 'reset accept field of other answers from the question' do
+        answer2 = create(:answer, question: question, accept: true)
+        answer3 = create(:answer, question: question, accept: true)
+
+        patch :accept, params: {id: answer, format: :js}
+        answer.reload
+        answer2.reload
+        answer3.reload
+        expect(answer.accept).to eq true
+        expect(answer2.accept).to eq false
+        expect(answer3.accept).to eq false
+      end
+
+      it 'render accept template' do
+        patch :accept, params: {id: answer, format: :js}
+        expect(response).to render_template :accept
+      end
+    end
+
+    context "Non-author of question" do
+      it 'current user is not the author of the question' do
+        expect(@user).to_not eq question.user
+      end
+
+      it 'assigns the requested answer to @answer' do
+        patch :accept, params: {id: answer, format: :js}
+        expect(assigns(:answer)).to eq answer
+      end
+
+      it 'not change answer accept attribute' do
+        expect(answer.accept).to eq false
+        patch :accept, params: {id: answer, format: :js}
+        answer.reload
+        expect(answer.accept).to eq false
+      end
+
+      it 'not reset accept field of other answers from the question' do
+        answer2 = create(:answer, question: question, accept: true)
+        answer3 = create(:answer, question: question, accept: true)
+
+        patch :accept, params: {id: answer, format: :js}
+        answer.reload
+        answer2.reload
+        answer3.reload
+        expect(answer.accept).to eq false
+        expect(answer2.accept).to eq true
+        expect(answer3.accept).to eq true
+      end
+
+      it 'render accept template' do
+        patch :accept, params: {id: answer, format: :js}
+        expect(response).to render_template :accept
+      end
+    end
+  end
 end
