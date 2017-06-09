@@ -37,8 +37,38 @@ feature 'Accept answer', %q{
           expect(page).to_not have_selector("span.accept")
         end
       end
+    end
+
+    scenario 'accept other answer', js: true do
+      # accept answer
+      within "div#answer#{answer.id}" do
+        click_on 'Accept'
+        wait_for_ajax
+        expect(page).to_not have_link('Accept')
+        expect(page).to have_selector("span.accept")
+      end
+      [answer2, answer3].each do |a|
+        within "div#answer#{a.id}" do
+          expect(page).to have_link('Accept')
+          expect(page).to_not have_selector("span.accept")
+        end
+      end
+      # accept answer3
+      within "div#answer#{answer3.id}" do
+        click_on 'Accept'
+        wait_for_ajax
+        expect(page).to_not have_link('Accept')
+        expect(page).to have_selector("span.accept")
+      end
+      [answer2, answer].each do |a|
+        within "div#answer#{a.id}" do
+          expect(page).to have_link('Accept')
+          expect(page).to_not have_selector("span.accept")
+        end
+      end
 
     end
+
   end
 
   describe 'Non author of question' do
