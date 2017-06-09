@@ -1,6 +1,9 @@
 - if answer.persisted?
   div id="answer#{answer.id}"
-    p= answer.body
+    - if answer.accept
+      span.accept
+    p
+      | [#{answer.id}] #{answer.body}
     - if current_user&.author_of?(answer)
       = form_for answer, method: :patch, remote: true do |f|
         = render 'shared/form_error', object: f.object
@@ -10,6 +13,9 @@
         p
           = f.submit 'Save'
       p
+        - if !answer.accept && current_user&.author_of?(answer.question)
+          = link_to "Accept", accept_answer_path(answer), class: "accept-answer-link", remote: true, method: :patch
+          | &nbsp;
         = link_to "Edit", '', class: "edit-answer-link", data: {answer_id: answer.id}
         | &nbsp;
         = link_to "Delete", answer, method: :delete, remote: true

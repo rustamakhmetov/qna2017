@@ -1,0 +1,5 @@
+<%= render 'layouts/flash_messages' %>
+
+<% if @answer.errors.empty? %>
+  $(".answers").html('<%= j render @answer.question.answers %>');
+<% end %>
