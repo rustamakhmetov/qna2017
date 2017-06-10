@@ -4,6 +4,8 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
+  default_scope { order(accept: :desc, id: :asc) }
+
   def accept!
     transaction do
       question.answers.update_all(accept: false)
