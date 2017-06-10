@@ -1,10 +1,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
-  before_action :load_answer, only: [:edit, :update, :destroy]
+  before_action :load_answer, only: [:update, :destroy, :accept]
   before_action :load_question, only: [:create]
-
-  def edit
-  end
 
   def create
     @answer = @question.answers.new(answer_params.merge(user: current_user))
@@ -17,20 +14,28 @@ class AnswersController < ApplicationController
 
   def update
     if @answer.update(answer_params)
-      redirect_to @answer
+      flash_message :success, "Ответ успешно обновлен"
     else
-      render :edit
+      errors_to_flash @answer
     end
   end
 
   def destroy
     if current_user.author_of?(@answer)
       @answer.destroy!
-      message = "Ответ успешно удален."
+      flash_message :success, "Ответ успешно удален."
     else
-      message = "Вы не можете удалять чужие ответы."
+      flash_message :error, "Вы не можете удалять чужие ответы."
     end
-    redirect_to question_path(@answer.question_id), notice: message
+  end
+
+  def accept
+    if current_user.author_of?(@answer.question)
+      @answer.accept!
+      flash_message :success, "Ответ успешно принят."
+    else
+      flash_message :error, "Только автор вопроса может выполнить принятие ответа."
+    end
   end
 
   private

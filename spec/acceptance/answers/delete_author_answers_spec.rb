@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'acceptance/acceptance_helper'
 
 feature 'Removal of the author answers', %q{
   In order to be able to remove my answers
@@ -9,30 +9,36 @@ feature 'Removal of the author answers', %q{
   given(:user) { create(:user) }
   given(:question) { create(:question_with_answers, user: user) }
 
-  scenario 'Authenticated author delete your answer' do
+  scenario 'Authenticated author delete your answer', js: true do
     sign_in(user)
 
     qpath = question_path(question)
     visit qpath
-    answer_anchor = "Delete answer #{question.answers.first.id}"
-    click_on answer_anchor
+    answer_css = "#answer#{question.answers.first.id}"
+    within answer_css do
+      click_on "Delete"
+    end
     expect(page).to have_content 'Ответ успешно удален.'
     expect(current_path).to eq qpath
-    expect(page).to_not have_link(answer_anchor)
+    expect(page).to_not have_selector(answer_css)
   end
 
-  scenario 'Authenticated author can not delete other answer' do
+  scenario 'Authenticated author can not delete other answer', js: true do
     sign_in(user)
 
     answer = create(:answer, user: create(:user), question: question)
     visit question_path(question)
-    expect(page).to_not have_link "Delete answer #{answer.id}"
+    within "#answer#{answer.id}" do
+      expect(page).to_not have_link "Delete"
+    end
   end
 
-  scenario 'Non-authenticated user can not delete answers' do
+  scenario 'Non-authenticated user can not delete answers', js: true do
     visit question_path(question)
     question.answers.each do |answer|
-      expect(page).to_not have_link "Delete answer #{answer.id}"
+      within "#answer#{answer.id}" do
+        expect(page).to_not have_link "Delete"
+      end
     end
   end
 

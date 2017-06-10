@@ -1,4 +1,4 @@
-require 'rails_helper'
+require 'acceptance/acceptance_helper'
 
 feature 'Removal of the author questions', %q{
   In order to be able to remove my questions
