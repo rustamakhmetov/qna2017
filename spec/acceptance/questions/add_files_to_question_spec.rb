@@ -19,6 +19,6 @@ feature 'Add files to question', %q{
     attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
     click_on 'Create'
 
-    expext(page).to have_content("spec_helper.rb")
+    expect(page).to have_content("spec_helper.rb")
   end
 end

@@ -11,13 +11,19 @@ describe Answer do
     let!(:answer1) { create(:answer, question: question, id: 3) }
     let!(:answer2) { create(:answer, question: question, accept: true, id: 2) }
     let!(:answer3) { create(:answer, question: question, id: 1) }
+    let!(:answer4) { create(:answer, question: question, accept: true) }
 
     context 'with valid attributes'  do
       context 'accept answer1' do
+        it { expect { answer4.accept! }.to_not change { answer4.reload.accept }.from(true) }
+        it { expect { answer4.accept! }.to change { answer2.reload.accept }.from(true).to(false) }
         it { expect { answer1.accept! }.to change { answer1.reload.accept }.from(false).to(true) }
         it { expect { answer1.accept! }.to change { answer2.reload.accept }.from(true).to(false) }
         it { expect { answer1.accept! }.to_not change { answer3.reload.accept }.from(false) }
+
       end
+
+
     end
 
     context 'with invalid attributes'  do

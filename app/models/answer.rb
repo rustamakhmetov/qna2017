@@ -8,8 +8,8 @@ class Answer < ApplicationRecord
 
   def accept!
     transaction do
-      question.answers.update_all(accept: false)
-      update!(accept: true)
+      question.answers.where('id != ?', id).update_all(accept: false)
+      update!(accept: true) unless accept
     end
   end
 end
