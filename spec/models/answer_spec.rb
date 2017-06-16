@@ -5,6 +5,8 @@ describe Answer do
   it { should belong_to :question}
   it { should validate_presence_of :body}
   it { should have_db_column(:accept) }
+  it { should have_many :attachments }
+  it { should accept_nested_attributes_for :attachments }
 
   describe 'accept answer' do
     let(:question) { create(:question) }
@@ -20,10 +22,7 @@ describe Answer do
         it { expect { answer1.accept! }.to change { answer1.reload.accept }.from(false).to(true) }
         it { expect { answer1.accept! }.to change { answer2.reload.accept }.from(true).to(false) }
         it { expect { answer1.accept! }.to_not change { answer3.reload.accept }.from(false) }
-
       end
-
-
     end
 
     context 'with invalid attributes'  do
