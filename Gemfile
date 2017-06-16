@@ -43,7 +43,7 @@ gem 'jquery-turbolinks'
 gem 'jquery-rails'
 gem 'rubocop', require: false
 gem 'carrierwave'
-#gem 'remotipart'
+gem 'remotipart'
 #gem "cocoon"
 
 
