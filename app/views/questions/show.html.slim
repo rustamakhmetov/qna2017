@@ -13,6 +13,12 @@ javascript:
   p
     ' Body:
     = @question.body
+
+  p
+    ' Attachments:
+    - @question.attachments.each do |a|
+      li= link_to a.file.file.identifier, a.file.url
+
   - if current_user&.author_of?(@question)
     =form_for @question, html: {id: "edit_question_#{@question.id}"}, remote: true do |f|
       = render 'shared/form_error', object: f.object
