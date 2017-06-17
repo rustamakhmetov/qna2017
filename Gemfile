@@ -42,9 +42,9 @@ gem 'devise-i18n-views'
 gem 'jquery-turbolinks'
 gem 'jquery-rails'
 gem 'rubocop', require: false
-#gem 'carrierwave'
-#gem 'remotipart'
-#gem "cocoon"
+gem 'carrierwave'
+gem 'remotipart'
+#gem 'cocoon'
 
 
 group :development, :test do
