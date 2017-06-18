@@ -10,7 +10,7 @@
     h4 Attachments:
     #attachments
       = f.fields_for :attachments do |attachment|
-        = render 'questions/attachment_fields', f: attachment
+        = render 'attachment_fields', f: attachment
         .links
           = link_to_add_association 'add file', f, :attachments
   p

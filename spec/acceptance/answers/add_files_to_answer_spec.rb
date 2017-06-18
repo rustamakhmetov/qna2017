@@ -15,9 +15,16 @@ feature 'Add files to answer', %q{
     visit question_path(question)
 
     fill_in 'Body', with: 'Body 1'
-    attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
+    within(:xpath, "//div[@id='attachments']/div[@class='nested-fields'][1]/div[@class='field']") do
+      attach_file 'File', "#{Rails.root}/spec/spec_helper.rb"
+    end
+    click_on 'add file'
+    within(:xpath, "//div[@id='attachments']/div[@class='nested-fields'][2]/div[@class='field']") do
+      attach_file 'File', "#{Rails.root}/spec/rails_helper.rb"
+    end
     click_on 'Ask answer'
 
     expect(page).to have_link"spec_helper.rb", href: "/uploads/attachment/file/1/spec_helper.rb"
+    expect(page).to have_link"rails_helper.rb", href: "/uploads/attachment/file/2/rails_helper.rb"
   end
 end
