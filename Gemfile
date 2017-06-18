@@ -44,7 +44,7 @@ gem 'jquery-rails'
 gem 'rubocop', require: false
 gem 'carrierwave'
 gem 'remotipart'
-#gem 'cocoon'
+gem 'cocoon'
 
 
 group :development, :test do
