@@ -16,6 +16,7 @@ feature 'Remove files from question', %q{
 
     within("#attachment1") do
       click_on 'remove file'
+      wait_for_ajax
     end
     expect(page).to_not have_link "spec_helper.rb"
   end
