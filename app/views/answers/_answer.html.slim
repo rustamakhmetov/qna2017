@@ -4,6 +4,11 @@
       span.accept
     p
       | [#{answer.id}] #{answer.body}
+    p
+      #answer_attachments
+        h5 Attachments:
+        = render answer.attachments
+
     - if current_user&.author_of?(answer)
       = form_for answer, method: :patch, remote: true do |f|
         = render 'shared/form_error', object: f.object

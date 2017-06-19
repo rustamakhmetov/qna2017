@@ -13,6 +13,12 @@ javascript:
   p
     ' Body:
     = @question.body
+
+  p
+    #attachments1
+      h4 Attachments:
+      = render @question.attachments
+
   - if current_user&.author_of?(@question)
     =form_for @question, html: {id: "edit_question_#{@question.id}"}, remote: true do |f|
       = render 'shared/form_error', object: f.object
@@ -31,7 +37,7 @@ javascript:
 
 .answers
   p
-    | Answers:
+    h3 Answers:
     = render @question.answers
 
 = form_for [@question, @answer], remote: true do |f|
@@ -39,5 +45,12 @@ javascript:
   p
     =f.label :body
     =f.text_area :body
+  p
+    h5 Attachments:
+    #attachments
+      = f.fields_for :attachments do |attachment|
+        = render 'attachment_fields', f: attachment
+        .links
+          = link_to_add_association 'add file', f, :attachments
   p
     =f.submit 'Ask answer'

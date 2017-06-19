@@ -19,6 +19,14 @@ FactoryGirl.define do
         FactoryGirl.create_list(:answer, evaluator.answers_count, question: question, user: evaluator.user)
       end
     end
+    factory :question_with_attachments do
+      transient do
+        count 5
+      end
+      after :create do |question, evaluator|
+        FactoryGirl.create_list(:attachment, evaluator.count, attachable: question)
+      end
+    end
   end
 
   factory :invalid_question, class: "Question" do

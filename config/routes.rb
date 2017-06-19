@@ -6,5 +6,6 @@ Rails.application.routes.draw do
       patch 'accept', on: :member
     end
   end
+  resources :attachments, only: [:destroy]
   root 'questions#index'
 end

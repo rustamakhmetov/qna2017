@@ -7,4 +7,11 @@
     =f.label :body
     =f.text_area :body
   p
+    h4 Attachments:
+    #attachments
+      = f.fields_for :attachments do |attachment|
+        = render 'attachment_fields', f: attachment
+        .links
+          = link_to_add_association 'add file', f, :attachments
+  p
     =f.submit "Create"
