@@ -15,9 +15,15 @@ javascript:
     = @question.body
 
   p
-    ' Attachments:
-    - @question.attachments.each do |a|
-      li= link_to a.file.file.filename, a.file.url
+    #attachments1
+      h4 Attachments:
+      - @question.attachments.each do |a|
+        div id="attachment#{a.id}"
+          li
+            = link_to a.file.filename, a.file.url
+            - if current_user&.author_of?(@question)
+              '
+              = link_to 'remove file', a, method: :delete, remote: true
 
   - if current_user&.author_of?(@question)
     =form_for @question, html: {id: "edit_question_#{@question.id}"}, remote: true do |f|
@@ -37,7 +43,7 @@ javascript:
 
 .answers
   p
-    | Answers:
+    h3 Answers:
     = render @question.answers
 
 = form_for [@question, @answer], remote: true do |f|
@@ -46,12 +52,11 @@ javascript:
     =f.label :body
     =f.text_area :body
   p
-    h4 Attachments:
+    h5 Attachments:
     #attachments
       = f.fields_for :attachments do |attachment|
         = render 'attachment_fields', f: attachment
         .links
           = link_to_add_association 'add file', f, :attachments
-
   p
     =f.submit 'Ask answer'
