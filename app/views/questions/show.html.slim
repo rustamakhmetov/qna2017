@@ -17,13 +17,7 @@ javascript:
   p
     #attachments1
       h4 Attachments:
-      - @question.attachments.each do |a|
-        div id="attachment#{a.id}"
-          li
-            = link_to a.file.filename, a.file.url
-            - if current_user&.author_of?(@question)
-              '
-              = link_to 'remove file', a, method: :delete, remote: true
+      = render @question.attachments
 
   - if current_user&.author_of?(@question)
     =form_for @question, html: {id: "edit_question_#{@question.id}"}, remote: true do |f|
