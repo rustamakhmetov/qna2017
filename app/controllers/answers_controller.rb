@@ -5,10 +5,19 @@ class AnswersController < ApplicationController
 
   def create
     @answer = @question.answers.new(answer_params.merge(user: current_user))
-    if @answer.save
-      flash_message :success, "Ответ успешно добавлен"
-    else
-      errors_to_flash @answer
+    # if @answer.save
+    #   flash_message :success, "Ответ успешно добавлен"
+    # else
+    #   errors_to_flash @answer
+    # end
+    respond_to do |format|
+      if @answer.save
+        format.html { render @answer, layout: false }
+      else
+        #errors_to_flash @answer
+        format.html { render html: @answer.errors.full_messages.join("\n"), status: :unprocessable_entity } #@answer.errors.full_messages.join("\n")
+      end
+      format.js
     end
   end
 
