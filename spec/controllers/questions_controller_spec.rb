@@ -23,6 +23,12 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:question)).to eq question
     end
 
+    it 'assigns the votes to @question.votes' do
+      user = create(:user)
+      vote = create(:vote, user: user, votable: question)
+      expect(assigns(:question).votes).to eq [vote]
+    end
+
     it 'build a new Attachment to @answer.attachments' do
       expect(assigns(:answer).attachments.first).to be_a_new(Attachment)
     end
@@ -151,6 +157,55 @@ RSpec.describe QuestionsController, type: :controller do
     it 'redirects to index view' do
       delete :destroy, params: {id: question}
       expect(response).to redirect_to questions_path
+    end
+  end
+
+  describe 'PATCH #vote' do
+    sign_in_user
+
+    context "User vote for question" do
+      let!(:question) { create(:question) }
+
+      context "with valid attributes" do
+        it 'assigns the requested question to @question' do
+          patch :vote, params: {id: question, format: :json, act: :up}
+          expect(assigns(:question)).to eq question
+        end
+
+        it 'change to up +1 vote' do
+          expect { patch :vote, params: {id: question, format: :json, act: :up} }.to change(Vote, :count).by(1)
+        end
+
+        it 'change to down -1 vote' do
+          vote = create(:vote, votable: question)
+          expect { patch :vote, params: {id: question, format: :json, act: :down} }.to change(Vote, :count).by(-1)
+        end
+
+        it 'empty votes to change to down -1 vote' do
+          expect { patch :vote, params: {id: question, format: :json, act: :down} }.to_not change(Vote, :count)
+        end
+
+        it 'render vote to json' do
+          patch :vote, params: {id: question, format: :json, act: :up}
+          expect(response).to be_success
+          expect(response.body).to include_json(
+                                  object_klass: "question",
+                                  object_id: question.id,
+                                  count: question.votes.count
+                              )
+        end
+      end
+
+      context "with invalid attributes" do
+        it 'not change vote' do
+          expect { patch :vote, params: {id: question, format: :json, act: :unknow} }.to_not change(Vote, :count)
+        end
+
+        it 'generate error status' do
+          patch :vote, params: {id: question, format: :json, act: :unknow}
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+      end
     end
   end
 end
