@@ -5,7 +5,8 @@ Rails.application.routes.draw do
     resources :answers, shallow: true, except: [:index, :show, :new, :edit] do
       patch 'accept', on: :member
     end
-    patch 'vote', on: :member
+    patch 'vote_up', on: :member
+    patch 'vote_down', on: :member
   end
   resources :attachments, only: [:destroy]
   root 'questions#index'

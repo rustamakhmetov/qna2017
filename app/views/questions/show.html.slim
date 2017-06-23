@@ -19,10 +19,10 @@ div class="question" id="question#{@question.id}"
       h4 Attachments:
       = render @question.attachments
   .vote
-    =link_to "Up", vote_question_path(@question, act: :up), class: "vote-up", method: :patch, remote: true
+    =link_to "Up", vote_up_question_path, class: "vote-up", method: :patch, remote: true
     span.vote-count
       | #{@question.votes.count}
-    =link_to "Down", vote_question_path(@question, act: :down), class: "vote-down", method: :patch, remote: true
+    =link_to "Down", vote_down_question_path, class: "vote-down", method: :patch, remote: true
 
 
   - if current_user&.author_of?(@question)
