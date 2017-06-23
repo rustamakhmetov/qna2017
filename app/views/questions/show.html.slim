@@ -40,7 +40,7 @@ javascript:
     h3 Answers:
     = render @question.answers
 
-= form_for [@question, @answer], remote: true, data: {type: :html, turbolinks: false} do |f|
+= form_for [@question, @answer], remote: true, data: {type: :json, turbolinks: false} do |f|
   = render 'shared/form_error', object: f.object
   p
     =f.label :body

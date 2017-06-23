@@ -23,6 +23,8 @@ feature 'Add files to answer', %q{
       attach_file 'File', "#{Rails.root}/spec/rails_helper.rb"
     end
     click_on 'Ask answer'
+    wait_for_ajax
+    save_and_open_page
 
     expect(page).to have_link"spec_helper.rb", href: "/uploads/attachment/file/1/spec_helper.rb"
     expect(page).to have_link"rails_helper.rb", href: "/uploads/attachment/file/2/rails_helper.rb"

@@ -13,9 +13,11 @@ class AnswersController < ApplicationController
     respond_to do |format|
       if @answer.save
         format.html { render @answer, layout: false }
+        format.json { render json: @answer, include: :attachments}
       else
         #errors_to_flash @answer
         format.html { render html: @answer.errors.full_messages.join("\n"), status: :unprocessable_entity } #@answer.errors.full_messages.join("\n")
+        format.json { render json: @answer.errors.full_messages, status: :unprocessable_entity }
       end
       format.js
     end
@@ -58,6 +60,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:question_id, :body, attachments_attributes: [:file])
+    params.require(:answer).permit(:question_id, :body, attachments_attributes: [:file, :_destroy])
   end
 end
