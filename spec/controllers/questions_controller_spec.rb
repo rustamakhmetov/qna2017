@@ -160,59 +160,8 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-  describe 'PATCH #vote' do
-    sign_in_user
-
-    context "User vote for question" do
-      let!(:question) { create(:question) }
-
-      context "vote up" do
-        it 'assigns the requested question to @question' do
-          patch :vote_up, params: {id: question, format: :json}
-          expect(assigns(:votable)).to eq question
-        end
-
-        it 'change to up +1 vote' do
-          expect { patch :vote_up, params: {id: question, format: :json} }.to change(Vote, :count).by(1)
-        end
-
-        it 'render vote to json' do
-          patch :vote_up, params: {id: question, format: :json}
-          expect(response).to be_success
-          expect(response.body).to include_json(
-                                  object_klass: "question",
-                                  object_id: question.id,
-                                  count: question.votes.count
-                              )
-        end
-      end
-
-      context "vote down" do
-        it 'assigns the requested question to @question' do
-          patch :vote_down, params: {id: question, format: :json}
-          expect(assigns(:votable)).to eq question
-        end
-
-        it 'change to down -1 vote' do
-          vote = create(:vote, votable: question)
-          expect { patch :vote_down, params: {id: question, format: :json} }.to change(Vote, :count).by(-1)
-        end
-
-        it 'empty votes to change to down -1 vote' do
-          expect { patch :vote_down, params: {id: question, format: :json} }.to_not change(Vote, :count)
-        end
-
-        it 'render vote to json' do
-          patch :vote_down, params: {id: question, format: :json}
-          expect(response).to be_success
-          expect(response.body).to include_json(
-                                  object_klass: "question",
-                                  object_id: question.id,
-                                  count: question.votes.count
-                              )
-        end
-      end
-
-    end
+  it_behaves_like "voted" do
+    let(:object) { question }
   end
+
 end
