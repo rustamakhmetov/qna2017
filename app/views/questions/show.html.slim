@@ -18,12 +18,7 @@ div class="question" id="question#{@question.id}"
     #attachments1
       h4 Attachments:
       = render @question.attachments
-  .vote
-    =link_to "Up", vote_up_question_path, class: "vote-up", method: :patch, remote: true
-    span.vote-count
-      | #{@question.votes.count}
-    =link_to "Down", vote_down_question_path, class: "vote-down", method: :patch, remote: true
-
+  =render "questions/vote", object: @question
 
   - if current_user&.author_of?(@question)
     =form_for @question, html: {id: "edit_question_#{@question.id}"}, remote: true do |f|
