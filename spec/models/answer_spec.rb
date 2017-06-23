@@ -7,6 +7,8 @@ describe Answer do
   it { should accept_nested_attributes_for :attachments }
   it { should validate_presence_of :body}
   it { should have_db_column(:accept) }
+  it { should have_many(:votes).dependent(:destroy) }
+  it_behaves_like "votable"
 
   describe 'accept answer' do
     let(:question) { create(:question) }

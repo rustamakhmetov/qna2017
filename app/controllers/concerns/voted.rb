@@ -8,14 +8,14 @@ module Voted
   def vote_up
     @votable.votes.create(user: current_user)
     respond_to do |format|
-      format.json { render json: {object_klass: "question", object_id: @votable.id, count: @votable.votes.count}.to_json }
+      format.json { render json: {object_klass: @votable.class.name.downcase, object_id: @votable.id, count: @votable.votes.count}.to_json }
     end
   end
 
   def vote_down
     @votable.votes.first.destroy! if @votable.votes.count>0
     respond_to do |format|
-      format.json { render json: {object_klass: "question", object_id: @votable.id, count: @votable.votes.count}.to_json }
+      format.json { render json: {object_klass: @votable.class.name.downcase, object_id: @votable.id, count: @votable.votes.count}.to_json }
     end
   end
 

@@ -4,6 +4,7 @@
       span.accept
     p
       | [#{answer.id}] #{answer.body}
+    =render "questions/vote", object: answer
     p
       #answer_attachments
         h5 Attachments:
