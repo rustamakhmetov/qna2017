@@ -169,7 +169,7 @@ RSpec.describe QuestionsController, type: :controller do
       context "vote up" do
         it 'assigns the requested question to @question' do
           patch :vote_up, params: {id: question, format: :json}
-          expect(assigns(:question)).to eq question
+          expect(assigns(:votable)).to eq question
         end
 
         it 'change to up +1 vote' do
@@ -190,7 +190,7 @@ RSpec.describe QuestionsController, type: :controller do
       context "vote down" do
         it 'assigns the requested question to @question' do
           patch :vote_down, params: {id: question, format: :json}
-          expect(assigns(:question)).to eq question
+          expect(assigns(:votable)).to eq question
         end
 
         it 'change to down -1 vote' do

@@ -1,6 +1,8 @@
 class QuestionsController < ApplicationController
+  include Voted
+
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :load_question, only: [:show, :edit, :update, :destroy, :vote_up, :vote_down]
+  before_action :load_question, only: [:show, :edit, :update, :destroy]
 
   def index
     @questions = Question.all
@@ -46,19 +48,19 @@ class QuestionsController < ApplicationController
     redirect_to questions_path, notice: message
   end
 
-  def vote_up
-    @question.votes.create(user: current_user)
-    respond_to do |format|
-      format.json { render json: {object_klass: "question", object_id: @question.id, count: @question.votes.count}.to_json }
-    end
-  end
-
-  def vote_down
-    @question.votes.first.destroy! if @question.votes.count>0
-    respond_to do |format|
-      format.json { render json: {object_klass: "question", object_id: @question.id, count: @question.votes.count}.to_json }
-    end
-  end
+  # def vote_up
+  #   @question.votes.create(user: current_user)
+  #   respond_to do |format|
+  #     format.json { render json: {object_klass: "question", object_id: @question.id, count: @question.votes.count}.to_json }
+  #   end
+  # end
+  #
+  # def vote_down
+  #   @question.votes.first.destroy! if @question.votes.count>0
+  #   respond_to do |format|
+  #     format.json { render json: {object_klass: "question", object_id: @question.id, count: @question.votes.count}.to_json }
+  #   end
+  # end
 
   private
 
