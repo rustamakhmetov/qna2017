@@ -5,7 +5,7 @@ javascript:
         }
     });
 
-.question
+div class="question" id="question#{@question.id}"
   p
     ' Title:
     = @question.title
@@ -18,6 +18,12 @@ javascript:
     #attachments1
       h4 Attachments:
       = render @question.attachments
+  .vote
+    =link_to "Up", vote_question_path(@question, act: :up), class: "vote-up", method: :patch, remote: true
+    span.vote-count
+      | #{@question.votes.count}
+    =link_to "Down", vote_question_path(@question, act: :down), class: "vote-down", method: :patch, remote: true
+
 
   - if current_user&.author_of?(@question)
     =form_for @question, html: {id: "edit_question_#{@question.id}"}, remote: true do |f|
