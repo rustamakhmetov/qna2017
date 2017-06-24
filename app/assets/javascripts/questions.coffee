@@ -11,7 +11,7 @@ $ ->
 
   $(".vote").bind 'ajax:success', (e, data, status, xhr) ->
     vote = $.parseJSON(xhr.responseText)
-    $('div#question'+vote['object_id']+' > .vote > span.vote-count').html(vote['count']);
+    $('div#'+vote['object_klass']+vote['object_id']+' > .vote > span.vote-count').html(vote['count']);
   .bind 'ajax:error', (e, xhr, status, error) ->
     $("p.alert").html('');
     $("p.notice").html('');
