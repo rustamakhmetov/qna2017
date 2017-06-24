@@ -1,5 +1,7 @@
 .vote
-  =link_to "Up", polymorphic_path(object, action: :vote_up), class: "vote-up", method: :patch, remote: true
+  - unless current_user&.author_of?(object)
+    =link_to "Up", polymorphic_path(object, action: :vote_up), class: "vote-up", method: :patch, remote: true
   span.vote-count
     | #{object.votes.count}
-  =link_to "Down", polymorphic_path(object, action: :vote_down), class: "vote-down", method: :patch, remote: true
+  - unless current_user&.author_of?(object)
+    =link_to "Down", polymorphic_path(object, action: :vote_down), class: "vote-down", method: :patch, remote: true

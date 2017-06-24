@@ -48,20 +48,6 @@ class QuestionsController < ApplicationController
     redirect_to questions_path, notice: message
   end
 
-  # def vote_up
-  #   @question.votes.create(user: current_user)
-  #   respond_to do |format|
-  #     format.json { render json: {object_klass: "question", object_id: @question.id, count: @question.votes.count}.to_json }
-  #   end
-  # end
-  #
-  # def vote_down
-  #   @question.votes.first.destroy! if @question.votes.count>0
-  #   respond_to do |format|
-  #     format.json { render json: {object_klass: "question", object_id: @question.id, count: @question.votes.count}.to_json }
-  #   end
-  # end
-
   private
 
   def load_question

@@ -23,6 +23,19 @@ feature 'Vote for answer', %q{
     end
   end
 
+  scenario "Author of answer can't vote for answer", js: true do
+    sign_in(user)
+
+    author_answer = create(:answer, user: user)
+    visit question_path(author_answer.question)
+
+    within("div#answer#{author_answer.id} > .vote") do
+      expect(page).to_not have_css ".vote-up"
+      expect(page).to_not have_css ".vote-down"
+    end
+  end
+
+
   scenario 'Non-authenticate user ties vote for answer', js: true do
     visit question_path(answer.question)
     within("div#answer#{answer.id}") do

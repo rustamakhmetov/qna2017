@@ -4,7 +4,7 @@ shared_examples_for "voted" do
   describe 'PATCH #vote' do
     sign_in_user
 
-    context "User vote for question" do
+    context "User vote for object" do
 
       context "vote up" do
         it 'assigns the requested question to @question' do
@@ -51,6 +51,19 @@ shared_examples_for "voted" do
                                        count: object.votes.count
                                    )
         end
+      end
+    end
+
+    context "Author of object can't vote for object" do
+      let!(:object1) { create(object.class.name.downcase.to_sym, user: @user) }
+
+      it 'to not change vote up' do
+        expect { patch :vote_up, params: {id: object1, format: :json} }.to_not change(Vote, :count)
+      end
+
+      it 'to not change vote down' do
+        object1.votes << create(:vote, user: @user)
+        expect { patch :vote_down, params: {id: object1, format: :json} }.to_not change(Vote, :count)
       end
     end
   end
