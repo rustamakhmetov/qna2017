@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :vote do
     user
-    value 1
+    value nil
   end
 end

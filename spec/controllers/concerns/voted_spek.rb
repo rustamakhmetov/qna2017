@@ -34,12 +34,14 @@ shared_examples_for "voted" do
         end
 
         it 'change to down -1 vote' do
-          vote = create(:vote, votable: object)
-          expect { patch :vote_down, params: {id: object, format: :json} }.to change(Vote, :count).by(-1)
+          vote = create(:vote, votable: object, value: 1)
+          patch :vote_down, params: {id: object, format: :json}
+          expect(object.vote_rating).to eq 0
+          expect(object.votes.count).to eq 2
         end
 
         it 'empty votes to change to down -1 vote' do
-          expect { patch :vote_down, params: {id: object, format: :json} }.to_not change(Vote, :count)
+          expect { patch :vote_down, params: {id: object, format: :json} }.to change(Vote, :count).by(1)
         end
 
         it 'render vote to json' do
@@ -48,7 +50,7 @@ shared_examples_for "voted" do
           expect(response.body).to include_json(
                                        object_klass: object.class.name.downcase,
                                        object_id: object.id,
-                                       count: object.votes.count
+                                       count: object.vote_rating
                                    )
         end
       end
@@ -62,8 +64,27 @@ shared_examples_for "voted" do
       end
 
       it 'to not change vote down' do
-        object1.votes << create(:vote, user: @user)
+        object1.votes << create(:vote, user: @user, votable: object1, value: -1)
         expect { patch :vote_down, params: {id: object1, format: :json} }.to_not change(Vote, :count)
+      end
+    end
+
+    context 'Authenticate user vote up for object only one time' do
+      it 'to vote up' do
+        expect do
+          patch :vote_up, params: {id: object, format: :json}
+          patch :vote_up, params: {id: object, format: :json}
+        end.to change(Vote, :count).by(1)
+      end
+
+      it 'to vote down' do
+        object.votes << create(:vote, user: @user, votable: object, value: 1)
+        object.votes << create(:vote, user: create(:user), votable: object, value: 1)
+        expect(object.vote_rating).to eq 2
+        patch :vote_down, params: {id: object, format: :json}
+        patch :vote_down, params: {id: object, format: :json}
+        expect(object.vote_rating).to eq 0
+        expect(object.votes.count).to eq 2
       end
     end
   end

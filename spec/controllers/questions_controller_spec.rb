@@ -25,7 +25,7 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'assigns the votes to @question.votes' do
       user = create(:user)
-      vote = create(:vote, user: user, votable: question)
+      vote = create(:vote, user: user, votable: question, value: 1)
       expect(assigns(:question).votes).to eq [vote]
     end
 

@@ -79,6 +79,14 @@ shared_examples_for "votable" do
         expect(object.vote_down_exists?(user)).to eq false
         expect(object.vote_up_exists?(user)).to eq true
       end
+
+      it "can't cancel someone else's vote" do
+        object.vote_down!(create(:user))
+        object.vote_up!(user)
+        expect(object.vote_rating).to eq 0
+        object.vote_reset!(user)
+        expect(object.vote_rating).to eq -1
+      end
     end
   end
 end
