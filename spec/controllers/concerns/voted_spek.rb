@@ -74,7 +74,7 @@ shared_examples_for "voted" do
         expect do
           patch :vote_up, params: {id: object, format: :json}
           patch :vote_up, params: {id: object, format: :json}
-        end.to change(Vote, :count).by(1)
+        end.to_not change(Vote, :count)
       end
 
       it 'to vote down' do
@@ -83,8 +83,24 @@ shared_examples_for "voted" do
         expect(object.vote_rating).to eq 2
         patch :vote_down, params: {id: object, format: :json}
         patch :vote_down, params: {id: object, format: :json}
-        expect(object.vote_rating).to eq 0
-        expect(object.votes.count).to eq 2
+        expect(object.vote_rating).to eq 1
+        expect(object.votes.count).to eq 1
+      end
+    end
+
+    context 'Authenticated user can cancel' do
+      it 'vote up' do
+        expect do
+          patch :vote_up, params: {id: object, format: :json}
+          patch :vote_up, params: {id: object, format: :json}
+        end.to_not change(Vote, :count)
+      end
+
+      it 'vote down' do
+        expect do
+          patch :vote_down, params: {id: object, format: :json}
+          patch :vote_down, params: {id: object, format: :json}
+        end.to_not change(Vote, :count)
       end
     end
   end

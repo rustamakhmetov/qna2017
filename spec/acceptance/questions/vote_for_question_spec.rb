@@ -53,7 +53,7 @@ feature 'Vote for question', %q{
         wait_for_ajax
 
         within(".vote-count") do
-          expect(page).to have_content "1"
+          expect(page).to have_content "0"
         end
       end
     end
@@ -77,7 +77,7 @@ feature 'Vote for question', %q{
         wait_for_ajax
 
         within(".vote-count") do
-          expect(page).to have_content "0"
+          expect(page).to have_content "1"
         end
       end
     end
@@ -121,11 +121,60 @@ feature 'Vote for question', %q{
         end
       end
     end
-
-
   end
 
+  describe 'Authenticated user can cancel vote for question' do
 
+    scenario "vote up", js: true do
+      sign_in(user)
+
+      visit question_path(question)
+
+      within("div#question#{question.id} > .vote") do
+        expect(page).to have_css ".vote-up"
+        within(".vote-count") do
+          expect(page).to have_content "0"
+        end
+
+        find(:css, ".vote-up").click
+        wait_for_ajax
+        within(".vote-count") do
+          expect(page).to have_content "1"
+        end
+
+        find(:css, ".vote-up").click
+        wait_for_ajax
+        within(".vote-count") do
+          expect(page).to have_content "0"
+        end
+      end
+    end
+
+    scenario "vote down", js: true do
+      sign_in(user)
+
+      visit question_path(question)
+
+      within("div#question#{question.id} > .vote") do
+        expect(page).to have_css ".vote-down"
+        within(".vote-count") do
+          expect(page).to have_content "0"
+        end
+
+        find(:css, ".vote-down").click
+        wait_for_ajax
+        within(".vote-count") do
+          expect(page).to have_content "-1"
+        end
+
+        find(:css, ".vote-down").click
+        wait_for_ajax
+        within(".vote-count") do
+          expect(page).to have_content "0"
+        end
+      end
+    end
+  end
 
   scenario 'Non-authenticate user ties vote for question', js: true do
     visit question_path(question)

@@ -54,14 +54,14 @@ shared_examples_for "votable" do
         expect do
           object.vote_up!(user)
           object.vote_up!(user)
-        end.to change(Vote, :count).by(1)
+        end.to_not change(Vote, :count)
       end
 
       it "vote down" do
         expect do
           object.vote_down!(user)
           object.vote_down!(user)
-        end.to change(Vote, :count).by(1)
+        end.to_not change(Vote, :count)
       end
 
       it 'vote down after vote up' do
@@ -86,6 +86,22 @@ shared_examples_for "votable" do
         expect(object.vote_rating).to eq 0
         object.vote_reset!(user)
         expect(object.vote_rating).to eq -1
+      end
+    end
+
+    describe "Authenticated user can cancel" do
+      it "vote up" do
+        expect do
+          object.vote_up!(user)
+          object.vote_up!(user)
+        end.to_not change(Vote, :count)
+      end
+
+      it "vote down" do
+        expect do
+          object.vote_down!(user)
+          object.vote_down!(user)
+        end.to_not change(Vote, :count)
       end
     end
   end

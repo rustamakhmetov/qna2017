@@ -5,13 +5,25 @@ module Votable
   end
 
   def vote_up!(user)
-    vote_reset!(user) if vote_down_exists?(user)
-    votes.create(user: user, value: 1) unless user&.author_of?(self) || vote_up_exists?(user)
+    unless user&.author_of?(self)
+      if vote_up_exists?(user)
+        vote_reset!(user)
+      else
+        vote_reset!(user) if vote_down_exists?(user)
+        votes.create(user: user, value: 1)
+      end
+    end
   end
 
   def vote_down!(user)
-    vote_reset!(user) if vote_up_exists?(user)
-    votes.create(user: user, value: -1) unless user&.author_of?(self) || vote_down_exists?(user)
+    unless user&.author_of?(self)
+      if vote_down_exists?(user)
+        vote_reset!(user)
+      else
+        vote_reset!(user) if vote_up_exists?(user)
+        votes.create(user: user, value: -1)
+      end
+    end
   end
 
   def vote_up_exists?(user)

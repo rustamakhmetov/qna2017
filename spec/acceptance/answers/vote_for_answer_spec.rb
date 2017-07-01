@@ -53,7 +53,7 @@ feature 'Vote for answer', %q{
         wait_for_ajax
 
         within(".vote-count") do
-          expect(page).to have_content "1"
+          expect(page).to have_content "0"
         end
       end
     end
@@ -77,7 +77,7 @@ feature 'Vote for answer', %q{
         wait_for_ajax
 
         within(".vote-count") do
-          expect(page).to have_content "0"
+          expect(page).to have_content "1"
         end
       end
     end
