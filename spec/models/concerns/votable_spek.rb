@@ -104,5 +104,19 @@ shared_examples_for "votable" do
         end.to_not change(Vote, :count)
       end
     end
+
+    describe 'Auto update static rating field on object' do
+      it 'to vote up' do
+        object.vote_up!(user)
+        object.reload
+        expect(object.rating).to eq 1
+      end
+
+      it 'to vote down' do
+        object.vote_down!(user)
+        object.reload
+        expect(object.rating).to eq -1
+      end
+    end
   end
 end

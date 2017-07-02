@@ -43,6 +43,14 @@ module Votable
   end
 
   def vote_rating
-    votes.sum(:value)
+    reload_attribute(:rating)
+    rating
+  end
+
+  private
+
+  def reload_attribute(attr)
+    value = self.class.where(:id=>id).select(attr).first[attr]
+    self[attr] = value
   end
 end
