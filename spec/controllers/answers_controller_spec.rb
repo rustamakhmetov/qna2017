@@ -167,4 +167,8 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  it_behaves_like "voted" do
+    let(:object) { answer }
+  end
 end

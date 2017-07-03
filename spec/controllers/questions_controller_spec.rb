@@ -23,6 +23,12 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:question)).to eq question
     end
 
+    it 'assigns the votes to @question.votes' do
+      user = create(:user)
+      vote = create(:vote, user: user, votable: question, value: 1)
+      expect(assigns(:question).votes).to eq [vote]
+    end
+
     it 'build a new Attachment to @answer.attachments' do
       expect(assigns(:answer).attachments.first).to be_a_new(Attachment)
     end
@@ -153,4 +159,9 @@ RSpec.describe QuestionsController, type: :controller do
       expect(response).to redirect_to questions_path
     end
   end
+
+  it_behaves_like "voted" do
+    let(:object) { question }
+  end
+
 end
