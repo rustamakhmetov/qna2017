@@ -8,12 +8,10 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :questions do
-    resources :answers, shallow: true, except: [:index, :show, :new, :edit] do
+  resources :questions, concerns: [:votable] do
+    resources :answers, shallow: true, except: %i[index show new edit], concerns: [:votable] do
       patch 'accept', on: :member
-      concerns :votable
     end
-    concerns :votable
   end
 
   resources :attachments, only: [:destroy]
