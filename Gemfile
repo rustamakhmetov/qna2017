@@ -45,6 +45,8 @@ gem 'rubocop', require: false
 gem 'carrierwave'
 gem 'remotipart'
 gem 'cocoon'
+gem 'skim'
+gem 'gon'
 
 
 group :development, :test do

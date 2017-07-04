@@ -1,5 +1,7 @@
 require 'rails_helper'
 
+Capybara.server = :puma
+
 RSpec.configure do |config|
   Capybara.javascript_driver = :webkit
   Capybara.default_max_wait_time = 5
