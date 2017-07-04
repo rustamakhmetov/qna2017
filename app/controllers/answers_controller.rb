@@ -4,6 +4,7 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :load_answer, only: [:update, :destroy, :accept]
   before_action :load_question, only: [:create]
+  after_action :publish_answer, only: [:create]
 
   def create
     @answer = @question.answers.new(answer_params.merge(user: current_user))
@@ -52,5 +53,23 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:question_id, :body, attachments_attributes: [:file])
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+    # http://www.thegreatcodeadventure.com/using-action-controller-renderers-in-rails-5-with-devise/
+    renderer = ApplicationController.renderer.new
+    renderer.instance_variable_set(:@env, {"HTTP_HOST"=>"localhost:3000",
+                                           "HTTPS"=>"off",
+                                           "REQUEST_METHOD"=>"GET",
+                                           "SCRIPT_NAME"=>"",
+                                           "warden" => warden})
+    ActionCable.server.broadcast(
+        'answers',
+        renderer.render(
+            partial: "answers/answer",
+            locals: { answer: @answer }
+        )
+    )
   end
 end
