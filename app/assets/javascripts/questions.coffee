@@ -3,6 +3,7 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $ ->
+  questionsList = $('.questions-list');
   $('.edit-question-link').click (e) ->
     e.preventDefault();
     $(this).hide();
@@ -18,3 +19,12 @@ $ ->
     errors = $.parseJSON(xhr.responseText);
     $.each errors, (index, value) ->
       $('#flash_messages').append(value);
+
+  App.cable.subscriptions.create('QuestionsChannel', {
+    connected: ->
+      console.log 'Connected!'
+      @perform 'follow'
+
+    received: (data) ->
+      questionsList.append(data);
+  });

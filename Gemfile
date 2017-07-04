@@ -57,6 +57,8 @@ group :development, :test do
   gem 'capybara-webkit'
   gem 'database_cleaner'
   gem 'rspec-json_expectations'
+  gem "chromedriver-helper"
+  gem 'selenium-webdriver'
 end
 
 group :development do

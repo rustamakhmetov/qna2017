@@ -82,22 +82,31 @@ feature 'Vote for question', %q{
       end
     end
 
-    scenario "vote down after vote up", js: true do
-      sign_in(user)
+    fscenario "vote down after vote up", js: true do
+      Capybara.using_session('user') do
+        sign_in(user)
 
-      visit question_path(question)
+        visit question_path(question)
+      end
 
-      within("div#question#{question.id} > .vote") do
-        within(".vote-count") do
-          expect(page).to have_content "0"
+      Capybara.using_session('user') do
+        within("div#question#{question.id} > .vote") do
+          within(".vote-count") do
+            expect(page).to have_content "0"
+          end
+          find(:css, ".vote-up").click
+          wait_for_ajax
         end
-        find(:css, ".vote-up").click
-        wait_for_ajax
-        find(:css, ".vote-down").click
-        wait_for_ajax
+      end
 
-        within(".vote-count") do
-          expect(page).to have_content "-1"
+      Capybara.using_session('user') do
+        within("div#question#{question.id} > .vote") do
+          find(:css, ".vote-down").click
+          wait_for_ajax
+
+          within(".vote-count") do
+            expect(page).to have_content "-1"
+          end
         end
       end
     end
