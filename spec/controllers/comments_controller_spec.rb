@@ -24,7 +24,7 @@ RSpec.describe CommentsController, type: :controller do
         expect(assigns("comment").user).to eq @user
       end
 
-      fit 'render template create' do
+      it 'render template create' do
         subject
         Rails.logger.info(response.body)
         expect(response).to render_template :create
