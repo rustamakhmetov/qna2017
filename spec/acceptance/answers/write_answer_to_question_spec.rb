@@ -60,10 +60,11 @@ feature "User can write an answer to a question", %q{
       end
 
       Capybara.using_session('user') do
-        fill_in 'Body', with: 'text text'
-        click_on 'Ask answer'
-        wait_for_ajax
-
+        within("form.new_answer") do
+          fill_in 'Body', with: 'text text'
+          click_on 'Ask answer'
+          wait_for_ajax
+        end
         expect(page).to have_content 'Ответ успешно добавлен'
         expect(page).to have_content 'text text'
       end

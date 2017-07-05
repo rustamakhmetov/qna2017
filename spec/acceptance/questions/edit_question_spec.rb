@@ -24,13 +24,13 @@ feature 'Edit question', %q{
 
     scenario 'edit question', js: true do
       within '.question' do
-        expect(page).to_not have_selector("textarea")
+        expect(page).to_not have_selector("form.edit_question")
         click_on 'Edit'
         expect(page).to_not have_link('Edit')
         expect(page).to have_selector("textarea")
         fill_in 'Body', with: 'new question'
         click_on 'Save'
-        expect(page).to_not have_selector("textarea")
+        expect(page).to_not have_selector("form.edit_question")
         expect(page).to have_link('Edit')
         expect(page).to_not have_content(question.body)
         expect(page).to have_content('new question')
@@ -54,7 +54,7 @@ feature 'Edit question', %q{
 
     scenario "don't see update form" do
       within '.question' do
-        expect(page).to_not have_selector("textarea")
+        expect(page).to_not have_selector("form.edit_question")
         expect(page).to_not have_link('Save')
       end
     end

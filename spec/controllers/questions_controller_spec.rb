@@ -4,14 +4,16 @@ RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
 
   describe 'GET #index' do
-    before { get :index }
+    subject { get :index }
 
     it 'populates an array of all questions' do
       questions = create_list(:question, 2)
+      subject
       expect(assigns(:questions)).to eq questions
     end
 
     it 'renders index view' do
+      subject
       expect(response).to render_template :index
     end
   end
@@ -31,6 +33,10 @@ RSpec.describe QuestionsController, type: :controller do
 
     it 'build a new Attachment to @answer.attachments' do
       expect(assigns(:answer).attachments.first).to be_a_new(Attachment)
+    end
+
+    it 'build a new Comment to @comment' do
+      expect(assigns(:comment)).to be_a_new(Comment)
     end
 
     it 'renders show view' do

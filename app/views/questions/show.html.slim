@@ -36,6 +36,19 @@ div class="question" id="question#{@question.id}"
     p
       = link_to 'Delete question', @question, method: :delete
 
+  .question-comments
+    h4 Комментарии:
+    .comments
+      = render @question.comments
+    - if current_user
+      = form_for [@question, @comment], remote: true do |f|
+        = render 'shared/form_error', object: f.object
+        p
+          = f.label :body, 'Ваш комментарий'
+          = f.text_area :body
+        p
+          = f.submit 'Add comment'
+
 .answers
   p
     h3 Answers:
