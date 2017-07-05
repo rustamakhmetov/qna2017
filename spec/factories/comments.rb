@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :comment do
     user
-    body "comment's text"
+    sequence(:body) { |n| "Comment body #{n}" }
   end
 
   factory :invalid_comment, class: "Comment" do
