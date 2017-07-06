@@ -36,7 +36,7 @@ div class="question" id="question#{@question.id}"
     p
       = link_to 'Delete question', @question, method: :delete
 
-  =render "comments/form", object: @question, comment: @comment
+  =render "comments/form", object: @question
 
 .answers
   p

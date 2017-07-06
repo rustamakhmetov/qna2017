@@ -2,8 +2,8 @@
   h4 Комментарии:
   .list-comments
     = render object.comments
-  - if current_user && comment
-    = form_for [object, comment], remote: true do |f|
+  - if current_user
+    = form_for [object, object.comments.build], remote: true do |f|
       = render 'shared/form_error', object: f.object
       p
         = f.label :body, 'Ваш комментарий'
