@@ -36,9 +36,9 @@ div class="question" id="question#{@question.id}"
     p
       = link_to 'Delete question', @question, method: :delete
 
-  .question-comments
+  .comments
     h4 Комментарии:
-    .comments
+    .list-comments
       = render @question.comments
     - if current_user
       = form_for [@question, @comment], remote: true do |f|

@@ -16,7 +16,7 @@ feature "User can write an comment to a question", %q{
       visit question_path(question)
       expect(page).to have_content question.title
       expect(page).to have_content question.body
-      within(".question-comments") do
+      within("div#question#{question.id} div.comments") do
         fill_in 'Ваш комментарий', with: 'text text'
         click_on 'Add comment'
         wait_for_ajax
@@ -34,7 +34,7 @@ feature "User can write an comment to a question", %q{
       3.times { question.comments << create(:comment, commentable: question, user: user) }
       visit question_path(question)
 
-      within(".question-comments > .comments") do
+      within("div#question#{question.id} div.comments") do
         question.comments.each do |comment|
           expect(page).to have_content comment.body
         end
@@ -47,7 +47,7 @@ feature "User can write an comment to a question", %q{
       visit question_path(question)
       expect(page).to have_content question.title
       expect(page).to have_content question.body
-      within(".question-comments") do
+      within("div#question#{question.id} div.comments") do
         fill_in 'Ваш комментарий', with: ''
         click_on 'Add comment'
         wait_for_ajax
@@ -62,7 +62,7 @@ feature "User can write an comment to a question", %q{
       3.times { question.comments << create(:comment, commentable: question, user: user) }
       visit question_path(question)
 
-      within(".question-comments > .comments") do
+      within("div#question#{question.id} div.comments") do
         question.comments.each do |comment|
           expect(page).to have_content comment.body
         end
@@ -71,7 +71,7 @@ feature "User can write an comment to a question", %q{
 
     scenario 'can not write comment to question', js: true do
       visit question_path(question)
-      within(".question-comments") do
+      within("div#question#{question.id} div.comments") do
         expect(page).to_not have_selector "form#new_comment"
       end
     end

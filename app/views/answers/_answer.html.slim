@@ -5,6 +5,20 @@
     p
       | [#{answer.id}] #{answer.body}
     =render "questions/vote", object: answer
+
+    .comments
+      h4 Комментарии:
+      .list-comments
+        = render answer.comments
+      - if current_user && @comment
+        = form_for [answer, @comment], remote: true do |f|
+          = render 'shared/form_error', object: f.object
+          p
+            = f.label :body, 'Ваш комментарий'
+            = f.text_area :body
+          p
+            = f.submit 'Add comment'
+
     p
       #answer_attachments
         h5 Attachments:
