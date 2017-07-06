@@ -1,9 +1,14 @@
 javascript:
-    $(document).ajaxError(function (e, xhr, settings) {
-        if (xhr.status == 401) {
-            $('#flash_messages').html(xhr.responseText);
-        }
-    });
+  var question_id;
+  $(document).ajaxError(function (e, xhr, settings) {
+      if (xhr.status == 401) {
+          $('#flash_messages').html(xhr.responseText);
+      }
+  });
+  $(document).ready(function(){
+    question_id = #{@question.id};
+  });
+
 
 div class="question" id="question#{@question.id}"
   p

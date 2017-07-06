@@ -78,6 +78,8 @@ feature "User can write an comment to a question", %q{
   end
 
   context "multiple sessions" do
+    given!(:question2) { create(:question) }
+
     scenario "comment on question appears on another user's page", js: true do
       Capybara.using_session('user') do
         sign_in user
@@ -88,6 +90,10 @@ feature "User can write an comment to a question", %q{
 
       Capybara.using_session('guest') do
         visit question_path(question)
+      end
+
+      Capybara.using_session('guest2') do
+        visit question_path(question2)
       end
 
       Capybara.using_session('user') do
@@ -102,6 +108,10 @@ feature "User can write an comment to a question", %q{
 
       Capybara.using_session('guest') do
         expect(page).to have_content 'text text'
+      end
+
+      Capybara.using_session('guest2') do
+        expect(page).to_not have_content 'text text'
       end
     end
   end

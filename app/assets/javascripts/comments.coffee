@@ -4,14 +4,15 @@ $ ->
     publish_comment(data_obj, false)
     $(comment_div(data_obj) + ' form#new_comment textarea#comment_body').val('')
 
-  App.cable.subscriptions.create('CommentsChannel', {
-    connected: ->
-      @perform 'follow'
-
-    received: (data) ->
-      data_obj = $.parseJSON(data)
-      publish_comment(data_obj, true)
-  });
+  $(document).ready ->
+    App.cable.subscriptions.create({
+      channel: 'CommentsChannel',
+      questionId: question_id
+    }, {
+      received: (data) ->
+        data_obj = $.parseJSON(data)
+        publish_comment(data_obj, true)
+    });
 
 root = exports ? this
 
