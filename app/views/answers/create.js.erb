@@ -2,5 +2,5 @@
 
 <% if @answer.errors.empty? %>
   $('.answers').append('<%= j render @answer %>');
-  $("#answer_body").val("");
+  $("form#new_answer textarea#answer_body").val("");
 <% end %>

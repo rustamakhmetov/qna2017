@@ -57,17 +57,10 @@ class AnswersController < ApplicationController
 
   def publish_answer
     return if @answer.errors.any?
-    # http://www.thegreatcodeadventure.com/using-action-controller-renderers-in-rails-5-with-devise/
-    renderer = ApplicationController.renderer.new
-    renderer.instance_variable_set(:@env, {"HTTP_HOST"=>"localhost:3000",
-                                           "HTTPS"=>"off",
-                                           "REQUEST_METHOD"=>"GET",
-                                           "SCRIPT_NAME"=>"",
-                                           "warden" => warden})
     ActionCable.server.broadcast(
         'answers',
         renderer.render(
-            partial: "answers/answer",
+            partial: "answers/data",
             locals: { answer: @answer }
         )
     )

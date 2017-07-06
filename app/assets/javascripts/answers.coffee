@@ -14,5 +14,8 @@ $ ->
       @perform 'follow'
 
     received: (data) ->
-      $('.answers').append(data);
+      data_obj = $.parseJSON(data)
+      user_data = $('a#logout').data()
+      if !user_data or (user_data and data_obj.user_id!=user_data.userId)
+        $('.answers').append(data_obj.body_html);
   });

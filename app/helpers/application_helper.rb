@@ -29,4 +29,15 @@ module ApplicationHelper
       model.errors.full_messages.each { |m| flash_message :error, m }
     end
   end
+
+  def renderer
+    # http://www.thegreatcodeadventure.com/using-action-controller-renderers-in-rails-5-with-devise/
+    renderer = ApplicationController.renderer.new
+    renderer.instance_variable_set(:@env, {"HTTP_HOST"=>"localhost:3000",
+                                            "HTTPS"=>"off",
+                                            "REQUEST_METHOD"=>"GET",
+                                            "SCRIPT_NAME"=>"",
+                                            "warden" => warden})
+    renderer
+  end
 end
