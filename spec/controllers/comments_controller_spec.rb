@@ -26,10 +26,10 @@ RSpec.describe CommentsController, type: :controller do
 
       it 'render template create' do
         subject
-        Rails.logger.info(response.body)
-        expect(response).to render_template :create
+        expect(response).to render_template "comments/_data"
         comment = question.comments.first
         expect(response.body).to include_json(
+                              user_id: @user.id,
                               id: comment.id,
                               commentable_id: question.id,
                               commentable_type: question.class.name,
@@ -45,7 +45,7 @@ RSpec.describe CommentsController, type: :controller do
 
       it 'render template create' do
         post :create, params: { question_id: question.id, comment: attributes_for(:invalid_comment), format: :json }
-        expect(response).to render_template :create
+        expect(response).to render_template "comments/_data"
       end
     end
   end

@@ -1,6 +1,7 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action :load_commentable
+  after_action :publish_comment, only: %i[create]
 
   def create
     @comment = @commentable.comments.new(comment_params.merge(user: current_user))
@@ -9,6 +10,7 @@ class CommentsController < ApplicationController
     else
       errors_to_flash @comment
     end
+    render partial: 'data', locals: { comment: @comment }
   end
 
   private
@@ -23,5 +25,22 @@ class CommentsController < ApplicationController
     else
       @commentable = Answer.find(params[:answer_id])
     end
+  end
+
+  def publish_comment
+    return if @comment.errors.any?
+    renderer = ApplicationController.renderer.new
+    renderer.instance_variable_set(:@env, {"HTTP_HOST"=>"localhost:3000",
+                                           "HTTPS"=>"off",
+                                           "REQUEST_METHOD"=>"GET",
+                                           "SCRIPT_NAME"=>"",
+                                           "warden" => warden})
+    ActionCable.server.broadcast(
+        'comments',
+        renderer.render(
+            partial: "comments/data",
+            locals: { comment: @comment }
+        )
+    )
   end
 end

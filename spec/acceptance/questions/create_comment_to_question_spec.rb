@@ -76,4 +76,33 @@ feature "User can write an comment to a question", %q{
       end
     end
   end
+
+  context "multiple sessions" do
+    scenario "comment on question appears on another user's page", js: true do
+      Capybara.using_session('user') do
+        sign_in user
+        visit question_path(question)
+        expect(page).to have_content question.title
+        expect(page).to have_content question.body
+      end
+
+      Capybara.using_session('guest') do
+        visit question_path(question)
+      end
+
+      Capybara.using_session('user') do
+        within("div#question#{question.id} div.comments") do
+          fill_in 'Ваш комментарий', with: 'text text'
+          click_on 'Add comment'
+          wait_for_ajax
+        end
+        expect(page).to have_content 'Комментарий успешно добавлен'
+        expect(page).to have_content 'text text'
+      end
+
+      Capybara.using_session('guest') do
+        expect(page).to have_content 'text text'
+      end
+    end
+  end
 end
