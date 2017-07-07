@@ -5,6 +5,9 @@
     p
       | [#{answer.id}] #{answer.body}
     =render "questions/vote", object: answer
+
+    =render "comments/form", object: answer
+
     p
       #answer_attachments
         h5 Attachments:

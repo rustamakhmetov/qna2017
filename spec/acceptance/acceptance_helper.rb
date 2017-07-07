@@ -1,9 +1,10 @@
 require 'rails_helper'
 
-RSpec.configure do |config|
-  Capybara.javascript_driver = :webkit
-  Capybara.default_max_wait_time = 5
+Capybara.server = :puma
+Capybara.javascript_driver = :webkit
+Capybara.default_max_wait_time = 5
 
+RSpec.configure do |config|
   config.include AcceptanceMacros, type: :feature
   config.include WaitForAjax, type: :feature
 

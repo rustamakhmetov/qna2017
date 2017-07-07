@@ -1,9 +1,14 @@
 javascript:
-    $(document).ajaxError(function (e, xhr, settings) {
-        if (xhr.status == 401) {
-            $('#flash_messages').html(xhr.responseText);
-        }
-    });
+  var question_id;
+  $(document).ajaxError(function (e, xhr, settings) {
+      if (xhr.status == 401) {
+          $('#flash_messages').html(xhr.responseText);
+      }
+  });
+  $(document).ready(function(){
+    question_id = #{@question.id};
+  });
+
 
 div class="question" id="question#{@question.id}"
   p
@@ -35,6 +40,8 @@ div class="question" id="question#{@question.id}"
       = link_to 'Edit', '', class: "edit-question-link", data: {question_id: @question.id}
     p
       = link_to 'Delete question', @question, method: :delete
+
+  =render "comments/form", object: @question
 
 .answers
   p

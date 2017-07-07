@@ -4,6 +4,7 @@ class Answer < ApplicationRecord
   belongs_to :user
   belongs_to :question
   has_many :attachments, as: :attachable, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
 
   validates :body, presence: true
 

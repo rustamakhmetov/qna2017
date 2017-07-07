@@ -4,14 +4,16 @@ RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
 
   describe 'GET #index' do
-    before { get :index }
+    subject { get :index }
 
     it 'populates an array of all questions' do
       questions = create_list(:question, 2)
+      subject
       expect(assigns(:questions)).to eq questions
     end
 
     it 'renders index view' do
+      subject
       expect(response).to render_template :index
     end
   end
