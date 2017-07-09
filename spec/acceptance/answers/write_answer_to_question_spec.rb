@@ -20,7 +20,7 @@ feature "User can write an answer to a question", %q{
     click_on 'Ask answer'
     wait_for_ajax
 
-    expect(page).to have_content 'Ответ успешно добавлен'
+    expect(page).to have_content 'Answer was successfully created'
     expect(page).to have_content 'text text'
   end
 
@@ -70,7 +70,7 @@ feature "User can write an answer to a question", %q{
           click_on 'Ask answer'
           wait_for_ajax
         end
-        expect(page).to have_content 'Ответ успешно добавлен'
+        expect(page).to have_content 'Answer was successfully created'
         expect(page).to have_content 'text text'
       end
 
