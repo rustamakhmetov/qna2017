@@ -15,3 +15,6 @@ en:
         notice: "Your question successfully created."
       destroy:
         notice: "Your question successfully deleted."
+    comments:
+      create:
+        notice: "Your comment successfully added."

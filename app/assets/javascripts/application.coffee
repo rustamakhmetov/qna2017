@@ -34,8 +34,20 @@ root = exports ? this
 root.show_flash_messages = (xhr) ->
   try
     datas = $.parseJSON(xhr.responseText)
-    for k,v of datas.messages
+    if datas.messages?
+      messages = datas.messages
+    else
+      messages = datas
+    for k,v of messages
       switch k
         when "success" then toastr.success('', mes) for mes in v
         when "error" then toastr.error('', mes) for mes in v
+        when "errors"
+          for k2,v2 of v
+            for err in v2
+              toastr.error('', k2.ucfirst()+' '+err)
+
         else null
+
+String.prototype.ucfirst = ->
+  @split('').map((char, i) -> unless i then char.toUpperCase() else char).join('')

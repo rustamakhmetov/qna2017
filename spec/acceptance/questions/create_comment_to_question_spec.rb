@@ -24,7 +24,7 @@ feature "User can write an comment to a question", %q{
           expect(page).to_not have_content 'text text'
         end
       end
-      expect(page).to have_content 'Комментарий успешно добавлен'
+      expect(page).to have_content 'Your comment successfully added.'
       expect(page).to have_content 'text text'
     end
 
@@ -102,7 +102,7 @@ feature "User can write an comment to a question", %q{
           click_on 'Add comment'
           wait_for_ajax
         end
-        expect(page).to have_content 'Комментарий успешно добавлен'
+        expect(page).to have_content 'Your comment successfully added.'
         expect(page).to have_content 'text text'
       end
 
