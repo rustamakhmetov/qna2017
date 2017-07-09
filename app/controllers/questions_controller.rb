@@ -4,55 +4,50 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :load_question, only: [:show, :edit, :update, :destroy]
   after_action :publish_question, only: [:create]
+  before_action :build_answer, only: %i[show]
 
   def index
-    @questions = Question.all
+    respond_with(@questions = Question.all)
   end
 
   def show
     @answer = Answer.new
-    @answer.attachments.build
+    respond_with @question
   end
 
   def new
-    @question = Question.new
-    @question.attachments.build
+    respond_with(@question = Question.new)
   end
 
   def edit
   end
 
   def create
-    @question = Question.new(question_params.merge(user: current_user))
-    if @question.save
-      redirect_to @question, notice: "Your question successfully created."
-    else
-      render :new
-    end
+    respond_with(@question = Question.create(question_params.merge(user: current_user)))
   end
 
   def update
-    if @question.update(question_params)
-      redirect_to @question
-    else
-      render :edit
-    end
+    @question.update(question_params)
+    respond_with @question
   end
 
   def destroy
     if current_user.author_of?(@question)
-      @question.destroy!
-      message = "Вопрос успешно удален."
+      respond_with @question.destroy!
     else
-      message = "Вы не можете удалять чужие вопросы."
+      @question.errors.add(:base, "Вы не можете удалять чужие вопросы.")
+      respond_with @question, location: questions_path
     end
-    redirect_to questions_path, notice: message
   end
 
   private
 
   def load_question
     @question = Question.find(params[:id])
+  end
+
+  def build_answer
+    @question.answers.build
   end
 
   def publish_question

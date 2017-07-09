@@ -48,6 +48,7 @@ gem 'cocoon'
 #gem 'skim'
 #gem 'gon'
 gem 'toastr-rails'
+gem "responders"
 
 
 group :development, :test do

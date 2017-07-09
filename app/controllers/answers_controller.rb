@@ -6,6 +6,8 @@ class AnswersController < ApplicationController
   before_action :load_question, only: [:create]
   after_action :publish_answer, only: [:create]
 
+  respond_to :js
+
   def create
     @answer = @question.answers.new(answer_params.merge(user: current_user))
     if @answer.save
@@ -16,11 +18,8 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if @answer.update(answer_params)
-      flash_message :success, "Ответ успешно обновлен"
-    else
-      errors_to_flash @answer
-    end
+    @answer.update(answer_params)
+    respond_with @answer
   end
 
   def destroy

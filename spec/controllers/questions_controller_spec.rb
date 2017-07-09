@@ -157,6 +157,12 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     it 'redirects to index view' do
+      question = create(:question, user: @user)
+      delete :destroy, params: {id: question}
+      expect(response).to redirect_to questions_path
+    end
+
+    it 'redirects to index view if non-author delete question' do
       delete :destroy, params: {id: question}
       expect(response).to redirect_to questions_path
     end
