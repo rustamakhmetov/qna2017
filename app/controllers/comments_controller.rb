@@ -3,14 +3,10 @@ class CommentsController < ApplicationController
   before_action :load_commentable
   after_action :publish_comment, only: %i[create]
 
+  respond_to :json
+
   def create
-    @comment = @commentable.comments.new(comment_params.merge(user: current_user))
-    if @comment.save
-      flash_message :success, "Комментарий успешно добавлен"
-    else
-      errors_to_flash @comment
-    end
-    render partial: 'data', locals: { comment: @comment }
+    respond_with(@comment = @commentable.comments.create(comment_params.merge(user: current_user)))
   end
 
   private

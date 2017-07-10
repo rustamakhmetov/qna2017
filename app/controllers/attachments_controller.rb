@@ -2,12 +2,14 @@ class AttachmentsController < ApplicationController
   before_action :authenticate_user!
   before_action :load_attachment
 
+  respond_to :js
+
   def destroy
     if current_user.author_of?(@attachment.attachable)
-      @attachment.destroy!
-      flash_message :success, "Файл успешно удален."
+      respond_with(@attachment.destroy!)
     else
-      flash_message :error, "Вы не можете удалять чужие файлы."
+      @attachment.errors.add(:base, "Вы не можете удалять чужие файлы.")
+      respond_with @attachment
     end
   end
 

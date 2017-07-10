@@ -18,7 +18,7 @@ feature 'Removal of the author questions', %q{
 
     visit question_path(question)
     click_on 'Delete question'
-    expect(page).to have_content 'Вопрос успешно удален.'
+    expect(page).to have_content 'Your question successfully deleted.'
     expect(current_path).to eq questions_path
     expect(page).to_not have_content question.title
   end

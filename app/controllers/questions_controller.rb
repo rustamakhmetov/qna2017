@@ -6,47 +6,37 @@ class QuestionsController < ApplicationController
   after_action :publish_question, only: [:create]
 
   def index
-    @questions = Question.all
+    respond_with(@questions = Question.all)
   end
 
   def show
     @answer = Answer.new
-    @answer.attachments.build
+    respond_with @question
   end
 
   def new
-    @question = Question.new
-    @question.attachments.build
+    respond_with(@question = Question.new)
   end
 
   def edit
   end
 
   def create
-    @question = Question.new(question_params.merge(user: current_user))
-    if @question.save
-      redirect_to @question, notice: "Your question successfully created."
-    else
-      render :new
-    end
+    respond_with(@question = Question.create(question_params.merge(user: current_user)))
   end
 
   def update
-    if @question.update(question_params)
-      redirect_to @question
-    else
-      render :edit
-    end
+    @question.update(question_params)
+    respond_with @question
   end
 
   def destroy
     if current_user.author_of?(@question)
-      @question.destroy!
-      message = "Вопрос успешно удален."
+      respond_with @question.destroy!
     else
-      message = "Вы не можете удалять чужие вопросы."
+      @question.errors.add(:base, "You can not delete questions from other authors.")
+      respond_with @question, location: questions_path
     end
-    redirect_to questions_path, notice: message
   end
 
   private

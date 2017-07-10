@@ -26,7 +26,7 @@ RSpec.describe CommentsController, type: :controller do
 
       it 'render template create' do
         subject
-        expect(response).to render_template "comments/_data"
+        expect(response).to render_template "comments/create"
         comment = question.comments.first
         expect(response.body).to include_json(
                               user_id: @user.id,
@@ -45,7 +45,7 @@ RSpec.describe CommentsController, type: :controller do
 
       it 'render template create' do
         post :create, params: { question_id: question.id, comment: attributes_for(:invalid_comment), format: :json }
-        expect(response).to render_template "comments/_data"
+        expect(response).to have_http_status(422)
       end
     end
   end

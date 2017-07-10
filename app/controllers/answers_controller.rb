@@ -6,38 +6,34 @@ class AnswersController < ApplicationController
   before_action :load_question, only: [:create]
   after_action :publish_answer, only: [:create]
 
+  respond_to :js
+
   def create
-    @answer = @question.answers.new(answer_params.merge(user: current_user))
-    if @answer.save
-      flash_message :success, "Ответ успешно добавлен"
-    else
-      errors_to_flash @answer
-    end
+    @answer = @question.answers.create(answer_params.merge(user: current_user))
+    errors_to_flash @answer
+    respond_with @answer
   end
 
   def update
-    if @answer.update(answer_params)
-      flash_message :success, "Ответ успешно обновлен"
-    else
-      errors_to_flash @answer
-    end
+    @answer.update(answer_params)
+    respond_with @answer
   end
 
   def destroy
     if current_user.author_of?(@answer)
-      @answer.destroy!
-      flash_message :success, "Ответ успешно удален."
+      respond_with(@answer.destroy!)
     else
-      flash_message :error, "Вы не можете удалять чужие ответы."
+      @answer.errors.add(:base, "Вы не можете удалять чужие ответы.")
+      respond_with @answer
     end
   end
 
   def accept
     if current_user.author_of?(@answer.question)
-      @answer.accept!
-      flash_message :success, "Ответ успешно принят."
+      respond_with(@answer.accept!)
     else
-      flash_message :error, "Только автор вопроса может выполнить принятие ответа."
+      @answer.errors.add(:base, "Только автор вопроса может выполнить принятие ответа.")
+      respond_with @answer
     end
   end
 

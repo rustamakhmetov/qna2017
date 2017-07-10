@@ -18,7 +18,7 @@ feature 'Removal of the author answers', %q{
     within answer_css do
       click_on "Delete"
     end
-    expect(page).to have_content 'Ответ успешно удален.'
+    expect(page).to have_content 'Answer was successfully destroyed.'
     expect(current_path).to eq qpath
     expect(page).to_not have_selector(answer_css)
   end
