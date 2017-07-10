@@ -35,18 +35,17 @@ root.show_flash_messages = (xhr) ->
   try
     datas = $.parseJSON(xhr.responseText)
     if datas.messages?
-      messages = datas.messages
+      list_messages = datas.messages
     else
-      messages = datas
-    for k,v of messages
-      switch k
-        when "success" then toastr.success('', mes) for mes in v
-        when "error" then toastr.error('', mes) for mes in v
+      list_messages = datas
+    for message_type, messages of list_messages
+      switch message_type
+        when "success" then toastr.success('', mes) for mes in messages
+        when "error" then toastr.error('', mes) for mes in messages
         when "errors"
-          for k2,v2 of v
-            for err in v2
-              toastr.error('', k2.ucfirst()+' '+err)
-
+          for field, errors of messages
+            for error in errors
+              toastr.error('', field.ucfirst()+' '+error)
         else null
 
 String.prototype.ucfirst = ->
