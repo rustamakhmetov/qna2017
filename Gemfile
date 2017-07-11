@@ -48,7 +48,8 @@ gem 'cocoon'
 #gem 'skim'
 #gem 'gon'
 gem 'toastr-rails'
-
+gem 'omniauth'
+gem 'omniauth-facebook'
 
 group :development, :test do
   gem 'rspec-rails'
