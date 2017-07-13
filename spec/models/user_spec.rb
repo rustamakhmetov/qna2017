@@ -97,7 +97,75 @@ RSpec.describe User, type: :model do
           expect(authorization.uid).to eq auth.uid
         end
       end
+
+      context "user does not exists and social network does not return email" do
+        let(:auth) { OmniAuth::AuthHash.new(provider: "twitter", uid: "123456", info: { email: "" })}
+
+        it "create new record user" do
+          expect{ User.find_for_omniauth(auth) }.to change(User, :count).by(1)
+        end
+
+        it "returns new user" do
+          expect(User.find_for_omniauth(auth)).to be_a(User)
+        end
+
+        it "fills user email with temp email" do
+          user = User.find_for_omniauth(auth)
+          expect(user.email_verified?).to eq false
+        end
+
+        it "creates new record for authorization" do
+          expect{ User.find_for_omniauth(auth) }.to change(Authorization, :count).by(1)
+        end
+
+        it "creates authorization with provider and uid" do
+          authorization = User.find_for_omniauth(auth).authorizations.first
+          expect(authorization.provider).to eq auth.provider
+          expect(authorization.uid).to eq auth.uid
+        end
+      end
     end
   end
 
+  describe "work with email" do
+    let!(:user) { create(:user) }
+    let(:auth) { OmniAuth::AuthHash.new(provider: "facebook", uid: "123456") }
+
+    scenario "#create_temp_email" do
+      user.update(email: User.create_temp_email(auth))
+      expect(user.email).to match User::TEMP_EMAIL_REGEX
+    end
+
+    describe "#email_verified?" do
+      scenario "with empty email" do
+        user.email = ""
+        expect(user.email_verified?).to eq false
+      end
+
+      scenario "with temp email" do
+        user.update(email: User.create_temp_email(auth))
+        expect(user.email_verified?).to eq false
+      end
+
+      scenario "with valid email" do
+        user.email = "new@user.com"
+        expect(user.email_verified?).to eq true
+      end
+    end
+
+    describe "#temp_email?" do
+      scenario "with temp email" do
+        user.email = User.create_temp_email(auth)
+        expect(user.temp_email?).to eq true
+      end
+
+      scenario "with valid email" do
+        expect(user.temp_email?).to eq false
+      end
+
+      scenario "with empty email" do
+        expect(user.temp_email?).to eq false
+      end
+    end
+  end
 end
