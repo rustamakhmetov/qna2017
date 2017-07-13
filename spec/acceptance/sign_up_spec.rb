@@ -23,8 +23,17 @@ feature 'User sign up', %q{
     fill_in 'Password', with: '12345678'
     fill_in 'Password confirmation', with: '12345678'
     click_on 'Sign up'
+    expect(page).to have_content "A message with a confirmation link has been sent to your email address"
 
-    expect(page).to have_content 'You have signed up successfully.'
+    open_email('new_user@test.com')
+    current_email.click_link 'Confirm my account'
+    expect(page).to have_content 'Your email address has been successfully confirmed.'
+
+    fill_in 'Email', with: 'new_user@test.com'
+    fill_in 'Password', with: '12345678'
+    click_on 'Log in'
+
+    expect(page).to have_content 'Signed in successfully.'
   end
 
   scenario 'Non-registered user try to sign up with invalid data' do
