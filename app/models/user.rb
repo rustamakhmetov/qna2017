@@ -29,7 +29,7 @@ class User < ApplicationRecord
       end
       user.save
     end
-    user.authorizations.create(provider: auth.provider, uid: auth.uid)
+    user.create_authorization(auth)
     user
   end
 
@@ -43,5 +43,41 @@ class User < ApplicationRecord
 
   def temp_email?
     self.email.match?(TEMP_EMAIL_REGEX)
+  end
+
+  def update_email(params)
+    if update(params.merge(confirmed_at: nil))
+      send_confirmation_instructions
+      yield if block_given?
+    end
+  end
+
+  def move_authorizations(user)
+    if user
+      user.authorizations.each do |authorization|
+        self.authorizations.create(authorization.attributes.except("id", "created_at",
+                                                                            "updated_at"))
+      end
+      user.destroy!
+      yield if block_given?
+    end
+  end
+
+  def create_authorization(auth)
+    self.authorizations.create(provider: auth.provider, uid: auth.uid)
+  end
+
+  def update_params(params)
+    email = params[:email]
+    user = User.find_by_email(email)
+    if user
+      user.move_authorizations(self) do
+        return {status: :existing, user: user }
+      end
+    else
+      self.update_email(params) do
+        return {status: :new, user: self }
+      end
+    end
   end
 end

@@ -167,5 +167,85 @@ RSpec.describe User, type: :model do
         expect(user.temp_email?).to eq false
       end
     end
+
+    describe "#update_email" do
+      scenario "without block" do
+        user.update_email(email: "new@weqwee.com")
+        expect(user.confirmed?).to eq false
+        expect(user.email).to eq "new@weqwee.com"
+      end
+
+      scenario "with block" do
+        expect(user.update_email(email: "new@weqwee.com"){1+1}).to eq 2
+        expect(user.confirmed?).to eq false
+        expect(user.email).to eq "new@weqwee.com"
+      end
+    end
+
+    scenario "#create_authorization" do
+      expect { user.create_authorization(auth) }.to change(Authorization, :count).by(1)
+    end
+
+    describe "#move_authorizations" do
+      scenario "from existing user" do
+        user2 = create(:user)
+        user2.create_authorization(auth)
+        expect(user.authorizations.count).to eq 0
+        res = user.move_authorizations(user2) { 1+1 }
+        expect(user.authorizations.count).to eq 1
+        expect(res).to eq 2
+      end
+
+      describe "from nil user" do
+        scenario "without block" do
+          expect { user.move_authorizations(nil) }.to_not raise_error
+        end
+
+        scenario "with block" do
+          expect( user.move_authorizations(nil) {1+1} ).to eq nil
+        end
+      end
+    end
+
+    describe "#update_params" do
+      describe "email of existing user" do
+        scenario "verify status" do
+          user2 = create(:user)
+          user2.email = User.create_temp_email(auth)
+          user2.save
+          user_status = user2.update_params(email: user.email)
+          expect(user_status[:status]).to eq :existing
+          expect(user_status[:user]).to eq user
+        end
+
+        scenario "remove user2" do
+          user2 = create(:user)
+          user2.email = User.create_temp_email(auth)
+          user2.save
+          user2.update_params(email: user.email)
+          expect { user2.reload }.to raise_exception(ActiveRecord::RecordNotFound)
+        end
+      end
+    end
+
+    describe "email of new user" do
+      scenario "verify status" do
+        user2 = create(:user)
+        user2.email = User.create_temp_email(auth)
+        user2.save
+        user_status = user2.update_params(email: "new@weqwew.com")
+        expect(user_status[:status]).to eq :new
+        expect(user_status[:user]).to eq user2
+        expect(user2.email).to eq "new@weqwew.com"
+      end
+
+      scenario "number of users unchanged" do
+        user2 = create(:user)
+        user2.email = User.create_temp_email(auth)
+        user2.save
+        expect { user2.update_params(email: "new@weqwew.com") }.to_not change(User, :count)
+      end
+    end
+
   end
 end

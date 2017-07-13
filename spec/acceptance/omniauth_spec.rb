@@ -19,7 +19,6 @@ feature 'Omniauth authorization', %q{
     end
 
     scenario "Existing user try login from social network with other email" do
-      #user.skip_confirmation!
       visit new_user_session_path
       expect(page).to have_link "Sign in with Facebook"
 
