@@ -18,5 +18,7 @@ Rails.application.routes.draw do
 
   resources :attachments, only: [:destroy]
 
+  match '/users/:id/finish_signup' => 'users#finish_signup', via: [:get, :patch], as: :finish_signup
+
   root 'questions#index'
 end
