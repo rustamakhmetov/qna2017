@@ -36,6 +36,20 @@ feature 'Omniauth authorization', %q{
     end
 
     describe "User try login from Facebook with empty email" do
+      scenario "denied to fill an empty email" do
+        visit new_user_session_path
+        expect(page).to have_link "Sign in with Facebook"
+
+        auth = omniauth_mock(:facebook, email: "")
+        click_on "Sign in with Facebook"
+
+        expect(page).to have_content "Please confirm your email address"
+        fill_in 'Email', with: ""
+        click_on "Continue"
+
+        expect(page).to have_content("Email can't be blank")
+      end
+
       scenario "existing user" do
         visit new_user_session_path
         expect(page).to have_link "Sign in with Facebook"
