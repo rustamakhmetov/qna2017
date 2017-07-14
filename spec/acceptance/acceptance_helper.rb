@@ -7,6 +7,7 @@ Capybara.default_max_wait_time = 5
 RSpec.configure do |config|
   config.include AcceptanceMacros, type: :feature
   config.include WaitForAjax, type: :feature
+  config.include OmniauthMacros, type: :feature
 
   config.use_transactional_fixtures = false
 
