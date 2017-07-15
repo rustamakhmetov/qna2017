@@ -34,12 +34,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if current_user.author_of?(@question)
-      respond_with @question.destroy!
-    else
-      @question.errors.add(:base, "You can not delete questions from other authors.")
-      respond_with @question, location: questions_path
-    end
+    respond_with @question.destroy!
   end
 
   private

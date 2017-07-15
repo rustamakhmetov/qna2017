@@ -7,12 +7,7 @@ class AttachmentsController < ApplicationController
   respond_to :js
 
   def destroy
-    if current_user.author_of?(@attachment.attachable)
-      respond_with(@attachment.destroy!)
-    else
-      @attachment.errors.add(:base, "Вы не можете удалять чужие файлы.")
-      respond_with @attachment
-    end
+    respond_with(@attachment.destroy!)
   end
 
   private
