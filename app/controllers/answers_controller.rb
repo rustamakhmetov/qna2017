@@ -6,6 +6,8 @@ class AnswersController < ApplicationController
   before_action :load_question, only: [:create]
   after_action :publish_answer, only: [:create]
 
+  authorize_resource
+
   respond_to :js
 
   def create
@@ -20,21 +22,11 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    if current_user.author_of?(@answer)
-      respond_with(@answer.destroy!)
-    else
-      @answer.errors.add(:base, "Вы не можете удалять чужие ответы.")
-      respond_with @answer
-    end
+    respond_with(@answer.destroy!)
   end
 
   def accept
-    if current_user.author_of?(@answer.question)
-      respond_with(@answer.accept!)
-    else
-      @answer.errors.add(:base, "Только автор вопроса может выполнить принятие ответа.")
-      respond_with @answer
-    end
+    respond_with(@answer.accept!)
   end
 
   private

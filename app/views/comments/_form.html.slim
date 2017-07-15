@@ -2,7 +2,7 @@
   h4 Комментарии:
   .list-comments
     = render object.comments
-  - if current_user
+  - if can?(:create, Comment)
     = form_for [object, object.comments.build], remote: true, data: { type: :json } do |f|
       = render 'shared/form_error', object: f.object
       p

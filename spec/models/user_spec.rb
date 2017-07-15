@@ -148,8 +148,13 @@ RSpec.describe User, type: :model do
       end
 
       scenario "with valid email" do
-        user.email = "new@user.com"
+        user.update(email: "new@user.com")
         expect(user.email_verified?).to eq true
+      end
+
+      scenario "with non-confirmed email" do
+        user.update(email: "new@user.com", confirmed_at: nil)
+        expect(user.email_verified?).to eq false
       end
     end
 

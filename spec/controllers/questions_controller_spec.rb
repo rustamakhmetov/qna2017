@@ -105,6 +105,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   describe 'PATCH #update' do
     sign_in_user
+    let!(:question) { create(:question, user: @user) }
 
     context 'with valid attributes' do
       it 'assigns the requested question to @question' do
@@ -157,6 +158,7 @@ RSpec.describe QuestionsController, type: :controller do
     end
 
     it 'redirects to index view' do
+      question = create(:question, user: @user)
       delete :destroy, params: {id: question}
       expect(response).to redirect_to questions_path
     end

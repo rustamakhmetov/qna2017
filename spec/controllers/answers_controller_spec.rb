@@ -39,6 +39,7 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'PATCH #update' do
     sign_in_user
+    let!(:answer) { create(:answer, user: @user) }
 
     context 'with valid attributes' do
       it 'assigns the requested answer to @answer' do
@@ -88,6 +89,7 @@ RSpec.describe AnswersController, type: :controller do
     end
 
     it 'redirects to question view' do
+      answer = create(:answer, user: @user)
       delete :destroy, params: {id: answer, format: :js}
       expect(response).to render_template :destroy
     end
@@ -161,9 +163,10 @@ RSpec.describe AnswersController, type: :controller do
         expect(answer3.accept).to eq true
       end
 
-      it 'render accept template' do
+      it 'redirect to root path' do
         patch :accept, params: {id: answer, format: :js}
-        expect(response).to render_template :accept
+        #expect(response).to render_template :accept
+        expect(response).to redirect_to root_url
       end
     end
   end

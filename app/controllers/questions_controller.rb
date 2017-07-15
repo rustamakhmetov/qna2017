@@ -5,6 +5,8 @@ class QuestionsController < ApplicationController
   before_action :load_question, only: [:show, :edit, :update, :destroy]
   after_action :publish_question, only: [:create]
 
+  authorize_resource
+
   def index
     respond_with(@questions = Question.all)
   end
@@ -19,6 +21,7 @@ class QuestionsController < ApplicationController
   end
 
   def edit
+    a=1
   end
 
   def create
@@ -31,12 +34,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if current_user.author_of?(@question)
-      respond_with @question.destroy!
-    else
-      @question.errors.add(:base, "You can not delete questions from other authors.")
-      respond_with @question, location: questions_path
-    end
+    respond_with @question.destroy!
   end
 
   private

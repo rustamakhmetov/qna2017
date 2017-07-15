@@ -40,10 +40,7 @@ feature "User can write an answer to a question", %q{
 
   scenario 'Non-authenticated user can not answer to question', js: true do
     visit question_path(question)
-    click_on 'Ask answer'
-    wait_for_ajax
-
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    expect(page).to_not have_content 'Ask answer'
   end
 
   context "multiple sessions" do
