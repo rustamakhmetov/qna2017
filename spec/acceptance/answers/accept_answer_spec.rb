@@ -9,9 +9,10 @@ feature 'Accept answer', %q{
   describe 'Author of question' do
     given(:question) { create(:question) }
     given(:user) { question.user  }
-    given!(:answer) { create(:answer, question: question, user: user, body: "Answer [accept]") }
-    given!(:answer2) { create(:answer, question: question, user: user) }
-    given!(:answer3) { create(:answer, question: question, user: user, accept: true) }
+    given!(:other_user) { create(:user) }
+    given!(:answer) { create(:answer, question: question, user: other_user, body: "Answer [accept]") }
+    given!(:answer2) { create(:answer, question: question, user: other_user) }
+    given!(:answer3) { create(:answer, question: question, user: other_user, accept: true) }
 
     before do
       sign_in user

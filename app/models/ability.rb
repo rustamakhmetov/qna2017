@@ -1,32 +1,40 @@
 class Ability
   include CanCan::Ability
 
+  attr_reader :user
+
   def initialize(user)
-    # Define abilities for the passed in user here. For example:
-    #
-      user ||= User.new # guest user (not logged in)
-      if user.admin?
-        can :manage, :all
-      else
-        can :read, :all
-      end
-    #
-    # The first argument to `can` is the action you are giving the user
-    # permission to do.
-    # If you pass :manage it will apply to every action. Other common actions
-    # here are :read, :create, :update and :destroy.
-    #
-    # The second argument is the resource the user can perform the action on.
-    # If you pass :all it will apply to every resource. Otherwise pass a Ruby
-    # class of the resource.
-    #
-    # The third argument is an optional hash of conditions to further filter the
-    # objects.
-    # For example, here the user can only update published articles.
-    #
-    #   can :update, Article, :published => true
-    #
-    # See the wiki for details:
-    # https://github.com/CanCanCommunity/cancancan/wiki/Defining-Abilities
+    @user = user
+    if user&.email_verified?
+      user.admin? ? admin_abilities : user_abilities
+    else
+      guest_abilities
+    end
+  end
+
+  def guest_abilities
+    can :read, :all
+  end
+
+  def user_abilities
+    guest_abilities
+    can :create, [Question, Answer, Comment]
+    can [:update, :destroy], [Question, Answer, Comment], user: user
+    can :accept, Answer do |answer|
+      !answer.accept && @user.author_of?(answer.question) && !@user.author_of?(answer)
+    end
+    can [:vote_up, :vote_down], [Question, Answer] do |model|
+      !@user.author_of?(model)
+    end
+    can :edit, [Question, Answer]
+    can :manage, Vote
+    can :manage, Attachment do |attach|
+      @user.author_of?(attach.attachable)
+    end
+    can :manage, Authorization
+  end
+
+  def admin_abilities
+    can :manage, :all
   end
 end

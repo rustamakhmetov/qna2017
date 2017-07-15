@@ -38,7 +38,7 @@ class User < ApplicationRecord
   end
 
   def email_verified?
-    !(self.email.empty? || temp_email?)
+    !(self.email.empty? || temp_email?) && confirmed?
   end
 
   def temp_email?

@@ -25,7 +25,7 @@ div class="question" id="question#{@question.id}"
       = render @question.attachments
   =render "questions/vote", object: @question
 
-  - if current_user&.author_of?(@question)
+  - if can?(:update, @question)
     =form_for @question, html: {id: "edit_question_#{@question.id}"}, remote: true do |f|
       = render 'shared/form_error', object: f.object
       p
@@ -38,8 +38,9 @@ div class="question" id="question#{@question.id}"
         =f.submit "Save"
     p
       = link_to 'Edit', '', class: "edit-question-link", data: {question_id: @question.id}
-    p
-      = link_to 'Delete question', @question, method: :delete
+    -if can?(:destroy, @question)
+      p
+        = link_to 'Delete question', @question, method: :delete
 
   =render "comments/form", object: @question
 
@@ -60,5 +61,6 @@ div class="question" id="question#{@question.id}"
         = render 'attachment_fields', f: attachment
         .links
           = link_to_add_association 'add file', f, :attachments
-  p
-    =f.submit 'Ask answer'
+  -if can?(:create, Answer)
+    p
+      =f.submit 'Ask answer'
