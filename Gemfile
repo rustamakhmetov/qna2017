@@ -63,7 +63,6 @@ group :development, :test do
   gem 'capybara', '~> 2.13'
   gem 'capybara-webkit'
   gem 'database_cleaner'
-  gem 'rspec-json_expectations'
   gem 'capybara-email'
 end
 

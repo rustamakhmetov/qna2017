@@ -19,11 +19,10 @@ shared_examples_for "voted" do
         it 'render vote to json' do
           patch :vote_up, params: {id: object, format: :json}
           expect(response).to be_success
-          expect(response.body).to include_json(
-                                       object_klass: object.class.name.downcase,
-                                       object_id: object.id,
-                                       count: object.votes.count
-                                   )
+
+          expect(response.body).to be_json_eql(object.class.name.downcase.to_json).at_path("object_klass")
+          expect(response.body).to be_json_eql(object.id).at_path("object_id")
+          expect(response.body).to be_json_eql(object.votes.count).at_path("count")
         end
       end
 
@@ -47,11 +46,9 @@ shared_examples_for "voted" do
         it 'render vote to json' do
           patch :vote_down, params: {id: object, format: :json}
           expect(response).to be_success
-          expect(response.body).to include_json(
-                                       object_klass: object.class.name.downcase,
-                                       object_id: object.id,
-                                       count: object.vote_rating
-                                   )
+          expect(response.body).to be_json_eql(object.class.name.downcase.to_json).at_path("object_klass")
+          expect(response.body).to be_json_eql(object.id).at_path("object_id")
+          expect(response.body).to be_json_eql(object.vote_rating).at_path("count")
         end
       end
     end

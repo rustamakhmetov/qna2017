@@ -28,13 +28,11 @@ RSpec.describe CommentsController, type: :controller do
         subject
         expect(response).to render_template "comments/create"
         comment = question.comments.first
-        expect(response.body).to include_json(
-                              user_id: @user.id,
-                              id: comment.id,
-                              commentable_id: question.id,
-                              commentable_type: question.class.name,
-                              body: comment.body
-                              )
+        expect(response.body).to be_json_eql(@user.id).at_path("user_id")
+        expect(response.body).to be_json_eql(comment.id).at_path("id")
+        expect(response.body).to be_json_eql(question.id).at_path("commentable_id")
+        expect(response.body).to be_json_eql(question.class.name.to_json).at_path("commentable_type")
+        expect(response.body).to be_json_eql(comment.body.to_json).at_path("body")
       end
     end
 
