@@ -52,6 +52,7 @@ gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'cancancan'
+gem 'doorkeeper'
 
 group :development, :test do
   gem 'rspec-rails'
@@ -81,6 +82,7 @@ group :test do
   gem 'rails-controller-testing'
   gem 'launchy'
   #gem 'email_spec'
+  gem 'json_spec'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
