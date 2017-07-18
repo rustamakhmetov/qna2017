@@ -8,8 +8,8 @@ class Api::V1::ProfilesController < ApplicationController
     respond_with current_resource_owner
   end
 
-  def list
-    respond_with User.where("id != ?", current_resource_owner.id)
+  def index
+    respond_with User.where.not(id: current_resource_owner.id)
   end
 
   protected
