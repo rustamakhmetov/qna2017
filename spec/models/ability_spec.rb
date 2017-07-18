@@ -67,5 +67,8 @@ describe Ability do
     it { should be_able_to :accept, create(:answer, question: question) }
     it { should_not be_able_to :accept, create(:answer, question: question, accept: true) }
     it { should_not be_able_to :accept, create(:answer, question: other_question) }
+
+    # api
+    it { should be_able_to :manage, :profile }
   end
 end

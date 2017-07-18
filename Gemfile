@@ -52,6 +52,7 @@ gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
 gem 'cancancan'
+gem 'doorkeeper'
 
 group :development, :test do
   gem 'rspec-rails'
@@ -62,7 +63,6 @@ group :development, :test do
   gem 'capybara', '~> 2.13'
   gem 'capybara-webkit'
   gem 'database_cleaner'
-  gem 'rspec-json_expectations'
   gem 'capybara-email'
 end
 
@@ -81,6 +81,7 @@ group :test do
   gem 'rails-controller-testing'
   gem 'launchy'
   #gem 'email_spec'
+  gem 'json_spec'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
