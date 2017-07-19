@@ -4,6 +4,8 @@ FactoryGirl.define do
     user
     question
     body
+    accept false
+    rating 2
 
     factory :answer_with_attachments do
       transient do
