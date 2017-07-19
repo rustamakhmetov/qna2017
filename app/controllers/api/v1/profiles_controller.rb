@@ -1,6 +1,6 @@
 class Api::V1::ProfilesController < Api::V1::BaseController
   before_action :doorkeeper_authorize!
-  authorize_resource(class: (controller_name.classify.constantize rescue nil).present?)
+  authorize_resource :user
 
   respond_to :json
 
