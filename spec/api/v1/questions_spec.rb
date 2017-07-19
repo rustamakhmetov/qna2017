@@ -113,4 +113,83 @@ describe 'Questions API' do
       end
     end
   end
+
+  describe "POST /create" do
+    context 'unauthorized' do
+      it 'returns 401 status if there is no access_token' do
+        post "/api/v1/questions", params: { question: attributes_for(:question), format: :json }
+        expect(response.status).to eq 401
+      end
+
+      it 'returns 401 status if access_token is invalid' do
+        post "/api/v1/questions", params: { question: attributes_for(:question), format: :json, access_token: '1234' }
+        expect(response.status).to eq 401
+      end
+    end
+
+    context "authorized as user" do
+      let!(:user) { create(:user) }
+      let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+
+      context "with valid attributes" do
+        let!(:question_params) { attributes_for(:question) }
+
+        subject { post "/api/v1/questions", params: { question: question_params, format: :json, access_token: access_token.token }}
+
+        it 'returns 200 status' do
+          subject
+          expect(response).to be_success
+        end
+
+        it 'saves the new question to database' do
+          expect { subject }.to change(Question, :count).by(1)
+        end
+
+        %w(title body).each do |attr|
+          it "question object contains #{attr}" do
+            subject
+            expect(response.body).to be_json_eql(question_params[attr.to_sym].to_json).at_path("#{attr}")
+          end
+        end
+      end
+
+      context "with invalid attributes" do
+        let!(:invalid_question_params) { attributes_for(:invalid_question) }
+
+        subject { post "/api/v1/questions", params: { question: invalid_question_params, format: :json, access_token: access_token.token }}
+
+        it 'returns 422 status' do
+          subject
+          expect(response.status).to eq 422
+        end
+
+        it 'does not save question to database' do
+          expect { subject }.to_not change(Question, :count)
+        end
+
+        %w(title body).each do |attr|
+          it "reponse contains errors for #{attr}" do
+            subject
+            expect(response.body).to be_json_eql("can't be blank".to_json).at_path("errors/#{attr}/0")
+          end
+        end
+      end
+    end
+
+    context "authorized as guest" do
+      let(:access_token) { create(:access_token, resource_owner_id: nil) }
+      let!(:question_params) { attributes_for(:question) }
+
+      subject { post "/api/v1/questions", params: { question: question_params, format: :json, access_token: access_token.token }}
+
+      it 'returns does not success status' do
+        subject
+        expect(response).to_not be_success
+      end
+
+      it 'does not saved question to database' do
+        expect { subject }.to_not change(Question, :count)
+      end
+    end
+  end
 end
