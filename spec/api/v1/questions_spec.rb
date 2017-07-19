@@ -1,17 +1,9 @@
 require 'rails_helper'
 
 describe 'Questions API' do
-  describe 'GET /index' do
-    context 'unauthorized' do
-      it 'returns 401 status if there is no access_token' do
-        get '/api/v1/questions', params: { format: :json }
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if access_token is invalid' do
-        get '/api/v1/questions', params: { format: :json, access_token: '1234' }
-        expect(response.status).to eq 401
-      end
+  fdescribe 'GET /index' do
+    it_behaves_like "API authenticable" do
+      let(:url) { "/api/v1/questions" }
     end
 
     context 'authorized' do
