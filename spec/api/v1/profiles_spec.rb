@@ -2,16 +2,8 @@ require 'rails_helper'
 
 describe 'Profile API' do
   describe 'GET /me' do
-    context 'unauthorized' do
-      it 'returns 401 status if there is no access_token' do
-        get '/api/v1/profiles/me', params: { format: :json }
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if access_token is invalid' do
-        get '/api/v1/profiles/me', params: { format: :json, access_token: '1234' }
-        expect(response.status).to eq 401
-      end
+    it_behaves_like "API authenticable" do
+      let(:url) { '/api/v1/profiles/me' }
     end
 
     context 'authorized' do
@@ -39,16 +31,8 @@ describe 'Profile API' do
   end
 
   describe 'GET /index' do
-    context 'unauthorized' do
-      it 'returns 401 status if there is no access_token' do
-        get '/api/v1/profiles', params: { format: :json }
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if access_token is invalid' do
-        get '/api/v1/profiles', params: { format: :json, access_token: '1234' }
-        expect(response.status).to eq 401
-      end
+    it_behaves_like "API authenticable" do
+      let(:url) { '/api/v1/profiles' }
     end
 
     context 'authorized' do
@@ -81,8 +65,7 @@ describe 'Profile API' do
 
       %w(id email created_at updated_at admin).each do |attr|
         it "contains #{attr}" do
-          result = JSON(response.body)[0].to_json
-          expect(result).to be_json_eql(user1.send(attr.to_sym).to_json).at_path(attr)
+          expect(response.body).to be_json_eql(user1.send(attr.to_sym).to_json).at_path("0/#{attr}")
         end
       end
 
