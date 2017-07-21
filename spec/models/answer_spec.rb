@@ -43,15 +43,6 @@ describe Answer do
     let(:question) { create(:question) }
     subject { build(:answer, question: question, user: user)}
 
-    it "should calculate reputation after creating" do
-      expect(Reputation).to receive(:calculate).with(subject)
-      subject.save!
-    end
-
-    it "should not calculate reputation after update" do
-      subject.save!
-      expect(Reputation).to_not receive(:calculate).with(subject)
-      subject.update(body: "123")
-    end
+    it_behaves_like 'calculates reputation'
   end
 end

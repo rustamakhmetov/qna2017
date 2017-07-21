@@ -12,7 +12,7 @@ class Answer < ApplicationRecord
 
   default_scope { order(accept: :desc, id: :asc) }
 
-  after_create :calculate_rating
+  after_create :update_reputation
 
   def accept!
     transaction do
@@ -23,7 +23,7 @@ class Answer < ApplicationRecord
 
   private
 
-  def calculate_rating
-    Reputation.delay.calculate(self)
+  def update_reputation
+    CalculateReputationJob.perform_later(self)
   end
 end
