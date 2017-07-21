@@ -43,7 +43,7 @@ describe Answer do
     let(:question) { create(:question) }
     subject { build(:answer, question: question, user: user)}
 
-    fit "should calculate reputation after creating" do
+    it "should calculate reputation after creating" do
       expect(Reputation).to receive(:calculate).with(subject)
       subject.save!
     end

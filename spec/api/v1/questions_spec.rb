@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'Questions API' do
-  fdescribe 'GET /index' do
+  describe 'GET /index' do
     it_behaves_like "API authenticable" do
       let(:url) { "/api/v1/questions" }
     end
