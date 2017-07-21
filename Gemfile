@@ -56,10 +56,12 @@ gem 'doorkeeper'
 gem 'active_model_serializers'
 gem 'oj'
 gem 'oj_mimic_json'
-gem 'delayed_job_active_record'
+#gem 'delayed_job_active_record'
 gem 'daemons'
 gem 'whenever'
-#gem 'sidekiq'
+gem 'sidekiq'
+gem 'sinatra', '>= 1.3.0', require: nil
+gem 'sidetiq'
 
 group :development, :test do
   gem 'rspec-rails'

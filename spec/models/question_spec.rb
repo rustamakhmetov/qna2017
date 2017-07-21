@@ -18,6 +18,7 @@ describe Question do
     it "should calculate reputation after creating" do
       expect(Reputation).to receive(:calculate)
       subject.save!
+      Sidekiq::Worker.drain_all
     end
 
     it "should not calculate reputation after update" do

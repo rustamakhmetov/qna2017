@@ -1,1 +1,1 @@
-#Sidekiq::Extensions.enable_delay!
+Sidekiq::Extensions.enable_delay!
