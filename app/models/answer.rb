@@ -12,10 +12,19 @@ class Answer < ApplicationRecord
 
   default_scope { order(accept: :desc, id: :asc) }
 
+  after_create :calculate_rating
+
   def accept!
     transaction do
       question.answers.where('id != ?', id).update_all(accept: false)
       update!(accept: true)
     end
+  end
+
+  private
+
+  def calculate_rating
+    #Reputation.delay.calculate(self)
+    Reputation.calculate(self)
   end
 end

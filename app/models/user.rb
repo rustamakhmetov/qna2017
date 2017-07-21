@@ -33,6 +33,12 @@ class User < ApplicationRecord
     user
   end
 
+  def self.send_daily_digest
+    find_each.each do |user|
+      DailyMailer.delay.digest(user)
+    end
+  end
+
   def self.create_temp_email(auth)
     "#{TEMP_EMAIL_PREFIX}-#{auth.uid}-#{auth.provider}.com"
   end
