@@ -32,6 +32,7 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.extend ControllerMacros, type: :controller
+  config.include MailerHelpers, type: :mailer
   config.render_views = true
 
   config.filter_run focus: true

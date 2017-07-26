@@ -1,13 +1,7 @@
 class DailyMailer < ApplicationMailer
-
-  # Subject can be set in your I18n file at config/locales/en.yml
-  # with the following lookup:
-  #
-  #   en.daily_mailer.digest.subject
-  #
-  def digest
-    @greeting = "Hi"
-
-    mail to: "to@example.org"
+  def digest(user, questions)
+    @questions = questions
+    mail( to: user.email,
+          subject: t('daily_mailer.digest.subject'))
   end
 end
