@@ -173,16 +173,16 @@ RSpec.describe QuestionsController, type: :controller do
 
     context "User subscribe on question" do
       it 'assigns the requested question to @question' do
-        patch :subscribe, params: {id: question, format: :json}
+        patch :subscribe, params: {id: question, format: :js}
         expect(assigns(:question)).to eq question
       end
 
       it 'change to up +1 subscriptions' do
-        expect { patch :subscribe, params: {id: question, format: :json} }.to change(Subscription, :count).by(1)
+        expect { patch :subscribe, params: {id: question, format: :js} }.to change(Subscription, :count).by(1)
       end
 
       it 'render subscription to json' do
-        patch :subscribe, params: {id: question, format: :json}
+        patch :subscribe, params: {id: question, format: :js}
         expect(response).to be_success
       end
     end

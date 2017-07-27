@@ -7,7 +7,7 @@ class QuestionsController < ApplicationController
 
   authorize_resource
 
-  respond_to :json
+  respond_to :js
 
   def index
     respond_with(@questions = Question.all)
@@ -40,7 +40,7 @@ class QuestionsController < ApplicationController
   end
 
   def subscribe
-    respond_with @question.subscriptions.create(user: current_user)
+    respond_with(@subscription = @question.subscriptions.create(user: current_user))
   end
 
   private
