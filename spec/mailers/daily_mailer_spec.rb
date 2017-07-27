@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe DailyMailer, type: :mailer do
-  describe "digest" do
+  describe ".digest" do
     let(:user) { create(:user) }
     let(:questions_hash) { 2.times.map {|i| {title: "Title #{i}", url: "/questions/#{i}"} } }
     let(:mail1) { DailyMailer.digest(user, questions_hash) }
@@ -22,6 +22,30 @@ RSpec.describe DailyMailer, type: :mailer do
         expect(mail1.body.encoded).to match("#{question[:title]}")
         expect(mail1.body.encoded).to match("#{question[:url]}")
       end
+    end
+  end
+
+  describe ".new_answer" do
+    let!(:answer) { create(:answer) }
+    let(:question) { answer.question }
+    let(:user) { answer.question.user }
+    let(:mail1) { DailyMailer.new_answer(answer) }
+
+    it "assigns answer to @answer" do
+      mail :new_answer, answer
+      expect(assigns(:answer)).to eq answer
+      expect(assigns(:question)).to eq question
+    end
+
+    it "renders the headers" do
+      expect(mail1.subject).to eq("New answer for question '#{question.title}'")
+      expect(mail1.to).to eq [user.email]
+      expect(mail1.from).to eq(["from@example.com"])
+    end
+
+    it "renders the body" do
+      expect(mail1.body.encoded).to match("#{answer.body}")
+      expect(mail1.body.encoded).to match("#{question_url(question)}")
     end
   end
 

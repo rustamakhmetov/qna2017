@@ -37,4 +37,13 @@ describe Answer do
       end
     end
   end
+
+  describe "send notify mail to author" do
+    let(:answer) { build(:answer) }
+
+    it 'with new answer' do
+      expect(NotifyNewAnswerJob).to receive(:perform_later).with(answer).and_call_original
+      answer.save
+    end
+  end
 end
