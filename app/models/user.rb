@@ -21,6 +21,10 @@ class User < ApplicationRecord
     model.subscriptions.exists?(user_id: self.id)
   end
 
+  def subscribe(model)
+    model.subscriptions.create(user: self)
+  end
+
   def self.find_for_omniauth(auth)
     authorization = Authorization.where(provider: auth.provider, uid: auth.uid).first
     return authorization.user if authorization

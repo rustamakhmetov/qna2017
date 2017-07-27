@@ -264,13 +264,22 @@ RSpec.describe User, type: :model do
       end
 
       scenario "exists subscription" do
-        question.subscriptions.create(user: user)
+        user.subscribe(question)
         expect(user.subscribe_of?(question)).to eq true
       end
+    end
+  end
 
-      scenario "change subscription" do
-        expect { question.subscriptions.create(user: user) }.to change(Subscription, :count).by(1)
-      end
+  describe "#subscribe" do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    scenario 'change subscriptions' do
+      expect { user.subscribe(question) }.to change(Subscription, :count).by(1)
+    end
+
+    scenario 'return subscription object' do
+      expect(user.subscribe(question)).to be_a(Subscription)
     end
   end
 

@@ -168,7 +168,7 @@ RSpec.describe QuestionsController, type: :controller do
     let(:object) { question }
   end
 
-  fdescribe 'PATCH #subscribe' do
+  describe 'PATCH #subscribe' do
     sign_in_user
 
     context "User subscribe on question" do

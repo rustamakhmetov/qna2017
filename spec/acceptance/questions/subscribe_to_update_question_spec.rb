@@ -38,4 +38,19 @@ feature 'Subscribe to update question', %q{
       expect(page).to have_link("Unsubscribe")
     end
   end
+
+  describe "Non-authenticate user" do
+    given!(:question) { create(:question, user: user) }
+
+    before do
+      visit question_path(question)
+    end
+
+    scenario 'does not see subscriber links' do
+      within '.question' do
+        expect(page).to_not have_link('Subscribe')
+        expect(page).to_not have_link('Unsubscribe')
+      end
+    end
+  end
 end

@@ -46,4 +46,13 @@ describe Answer do
       answer.save
     end
   end
+
+  describe "send notify mail to the subscribers user" do
+    let(:answer) { build(:answer) }
+
+    it 'with new answer' do
+      expect(NotifySubscribersJob).to receive(:perform_later).with(answer).and_call_original
+      answer.save
+    end
+  end
 end

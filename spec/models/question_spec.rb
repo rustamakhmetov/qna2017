@@ -22,4 +22,13 @@ describe Question do
   end
 
   it_behaves_like "votable"
+
+  describe "send notifications to subscribers" do
+    let(:question) { create(:question) }
+
+    it 'when updating a question' do
+      expect(NotifySubscribersJob).to receive(:perform_later).with(question).and_call_original
+      question.update(body: "new body")
+    end
+  end
 end

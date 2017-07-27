@@ -25,5 +25,6 @@ class Answer < ApplicationRecord
 
   def new_answer
     NotifyNewAnswerJob.perform_later(self)
+    NotifySubscribersJob.perform_later(self)
   end
 end

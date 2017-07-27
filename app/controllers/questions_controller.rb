@@ -32,7 +32,15 @@ class QuestionsController < ApplicationController
 
   def update
     @question.update(question_params)
-    respond_with @question
+    respond_to do |format|
+      format.html do
+        if @question.errors.empty?
+          redirect_to(question_path(@question))
+        else
+          render :edit
+        end
+      end
+    end
   end
 
   def destroy
@@ -40,7 +48,7 @@ class QuestionsController < ApplicationController
   end
 
   def subscribe
-    respond_with(@subscription = @question.subscriptions.create(user: current_user))
+    respond_with(@subscription = current_user.subscribe(@question))
   end
 
   private

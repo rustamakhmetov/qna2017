@@ -25,14 +25,14 @@ RSpec.describe DailyMailer, type: :mailer do
     end
   end
 
-  describe ".new_answer" do
+  describe ".notify_new_answer" do
     let!(:answer) { create(:answer) }
     let(:question) { answer.question }
     let(:user) { answer.question.user }
-    let(:mail1) { DailyMailer.new_answer(answer) }
+    let(:mail1) { DailyMailer.notify_new_answer(user, answer) }
 
     it "assigns answer to @answer" do
-      mail :new_answer, answer
+      mail :notify_new_answer, user, answer
       expect(assigns(:answer)).to eq answer
       expect(assigns(:question)).to eq question
     end
@@ -49,4 +49,25 @@ RSpec.describe DailyMailer, type: :mailer do
     end
   end
 
+  describe ".notify_update_question" do
+    let!(:question) { create(:question) }
+    let(:user) { question.user }
+    let(:mail1) { DailyMailer.notify_update_question(user, question) }
+
+    it "assigns question to @question" do
+      mail :notify_update_question, user, question
+      expect(assigns(:question)).to eq question
+    end
+
+    it "renders the headers" do
+      expect(mail1.subject).to eq("The content of the question '#{question.title}' has been updated")
+      expect(mail1.to).to eq [user.email]
+      expect(mail1.from).to eq(["from@example.com"])
+    end
+
+    it "renders the body" do
+      expect(mail1.body.encoded).to match("#{question.body}")
+      expect(mail1.body.encoded).to match("#{question_url(question)}")
+    end
+  end
 end

@@ -60,3 +60,4 @@ bower.json
 
 history.txt
 dump.rdb
+*.sh
