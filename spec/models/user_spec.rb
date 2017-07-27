@@ -4,6 +4,7 @@ RSpec.describe User, type: :model do
   it { should have_many(:questions).dependent(:destroy)}
   it { should have_many(:answers).dependent(:destroy)}
   it { should have_many(:authorizations).dependent(:destroy)}
+  it { should have_many(:subscriptions).dependent(:destroy)}
   it { should validate_presence_of :email}
   it { should validate_presence_of :password}
 
@@ -251,6 +252,27 @@ RSpec.describe User, type: :model do
         expect { user2.update_params(email: "new@weqwew.com") }.to_not change(User, :count)
       end
     end
-
   end
+
+  describe "#subscribe_of?" do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    describe "from existing user" do
+      scenario "not exists subscription" do
+        expect(user.subscribe_of?(question)).to eq false
+      end
+
+      scenario "exists subscription" do
+        question.subscriptions.create(user: user)
+        expect(user.subscribe_of?(question)).to eq true
+      end
+
+      scenario "change subscription" do
+        expect { question.subscriptions.create(user: user) }.to change(Subscription, :count).by(1)
+      end
+    end
+  end
+
+
 end
