@@ -21,6 +21,7 @@ Rails.application.routes.draw do
       resources :comments, only: %i[create]
     end
     resources :comments, only: %i[create]
+    patch 'subscribe', on: :member
   end
 
   resources :attachments, only: [:destroy]
