@@ -187,4 +187,26 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #unsubscribe' do
+    sign_in_user
+
+    before { @user.subscribe(question) }
+
+    context "User unsubscribe on question" do
+      it 'assigns the requested question to @question' do
+        patch :unsubscribe, params: {id: question, format: :js}
+        expect(assigns(:question)).to eq question
+      end
+
+      it 'change to up -1 subscriptions' do
+        expect { patch :unsubscribe, params: {id: question, format: :js} }.to change(Subscription, :count).by(-1)
+      end
+
+      it 'render subscription to json' do
+        patch :unsubscribe, params: {id: question, format: :js}
+        expect(response).to be_success
+      end
+    end
+  end
 end

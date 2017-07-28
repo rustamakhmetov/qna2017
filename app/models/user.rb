@@ -22,7 +22,11 @@ class User < ApplicationRecord
   end
 
   def subscribe(model)
-    model.subscriptions.create(user: self)
+    model.subscriptions.first_or_create(user: self)
+  end
+
+  def unsubscribe(model)
+    model.subscriptions.where(user: self).destroy_all
   end
 
   def self.find_for_omniauth(auth)

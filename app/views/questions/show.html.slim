@@ -44,7 +44,7 @@ div class="question" id="question#{@question.id}"
   -if can?(:subscribe, @question)
     p
       - @subscribe = current_user.subscribe_of?(@question)
-      = link_to 'Unsubscribe', subscribe_question_path, class: "unsubscribe", method: :patch, remote: true,
+      = link_to 'Unsubscribe', unsubscribe_question_path, class: "unsubscribe", method: :patch, remote: true,
               style: (@subscribe ? '' : 'display:none')
       = link_to 'Subscribe', subscribe_question_path, class: "subscribe", method: :patch, remote: true,
               style: (@subscribe ? 'display:none' : '')

@@ -33,6 +33,7 @@ class Ability
     end
     can :manage, Authorization
     can :subscribe, Question
+    can :unsubscribe, Question
   end
 
   def admin_abilities

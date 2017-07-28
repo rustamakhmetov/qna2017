@@ -11,31 +11,82 @@ feature 'Subscribe to update question', %q{
   describe 'Authenticate user' do
     given!(:question) { create(:question, user: user) }
 
-    before do
-      sign_in user
-      visit question_path(question)
-    end
-
-    scenario 'see subscribe link' do
-      within '.question' do
-        expect(page).to have_link('Subscribe')
+    describe "subscribe" do
+      before do
+        sign_in user
+        visit question_path(question)
       end
-    end
 
-    scenario 'tried to subscribe on question', js: true do
-      within '.question' do
-        expect(page).to_not have_link('Unsubscribe')
-        click_on 'Subscribe'
+      scenario 'see subscribe link' do
+        within '.question' do
+          expect(page).to have_link('Subscribe')
+        end
+      end
+
+      scenario 'tried to subscribe on question', js: true do
+        within '.question' do
+          expect(page).to_not have_link('Unsubscribe')
+          click_on 'Subscribe'
+          expect(page).to_not have_link('Subscribe')
+          expect(page).to have_link("Unsubscribe")
+        end
+      end
+
+      scenario "rendered subscribe on question" do
+        question.subscriptions.create(user: user)
+        visit question_path(question)
         expect(page).to_not have_link('Subscribe')
         expect(page).to have_link("Unsubscribe")
       end
     end
 
-    scenario "rendered subscribe on question" do
-      question.subscriptions.create(user: user)
+    describe "unsubscribe" do
+      before do
+        sign_in user
+        user.subscribe(question)
+        visit question_path(question)
+      end
+
+      scenario 'see unsubscribe link' do
+        within '.question' do
+          expect(page).to have_link('Unsubscribe')
+        end
+      end
+
+      scenario 'tried to unsubscribe on question', js: true do
+        within '.question' do
+          expect(page).to_not have_link('Subscribe')
+          click_on 'Unsubscribe'
+          expect(page).to_not have_link('Unsubscribe')
+          expect(page).to have_link("Subscribe")
+        end
+      end
+    end
+  end
+
+  fdescribe "Author of question unsubscribe" do
+    given!(:question) { create(:question, user: user) }
+
+    before do
+      sign_in user
       visit question_path(question)
-      expect(page).to_not have_link('Subscribe')
-      expect(page).to have_link("Unsubscribe")
+    end
+
+    describe "unsubscribe" do
+      scenario 'see unsubscribe link' do
+        within '.question' do
+          expect(page).to have_link('Unsubscribe')
+        end
+      end
+
+      scenario 'tried to unsubscribe on question', js: true do
+        within '.question' do
+          expect(page).to_not have_link('Subscribe')
+          click_on 'Unsubscribe'
+          expect(page).to_not have_link('Unsubscribe')
+          expect(page).to have_link("Subscribe")
+        end
+      end
     end
   end
 

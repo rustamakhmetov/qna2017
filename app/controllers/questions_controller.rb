@@ -2,7 +2,7 @@ class QuestionsController < ApplicationController
   include Voted
 
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :load_question, only: [:show, :edit, :update, :destroy, :subscribe]
+  before_action :load_question, only: [:show, :edit, :update, :destroy, :subscribe, :unsubscribe]
   after_action :publish_question, only: [:create]
 
   authorize_resource
@@ -49,6 +49,10 @@ class QuestionsController < ApplicationController
 
   def subscribe
     respond_with(@subscription = current_user.subscribe(@question))
+  end
+
+  def unsubscribe
+    respond_with(current_user.unsubscribe(@question))
   end
 
   private

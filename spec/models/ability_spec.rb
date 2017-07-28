@@ -69,5 +69,6 @@ describe Ability do
     it { should_not be_able_to :accept, create(:answer, question: other_question) }
 
     it { should be_able_to :subscribe, create(:question) }
+    it { should be_able_to :unsubscribe, create(:question) }
   end
 end

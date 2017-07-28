@@ -278,10 +278,23 @@ RSpec.describe User, type: :model do
       expect { user.subscribe(question) }.to change(Subscription, :count).by(1)
     end
 
+    scenario 'double subscribe returns an existing subscription' do
+      subscription = user.subscribe(question)
+      expect(user.subscribe(question)).to eq subscription
+    end
+
     scenario 'return subscription object' do
       expect(user.subscribe(question)).to be_a(Subscription)
     end
   end
 
+  describe "#unsubscribe" do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
 
+    scenario 'change subscriptions' do
+      user.subscribe(question)
+      expect { user.unsubscribe(question) }.to change(Subscription, :count).by(-1)
+    end
+  end
 end
