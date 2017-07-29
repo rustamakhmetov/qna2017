@@ -23,7 +23,6 @@ class QuestionsController < ApplicationController
   end
 
   def edit
-    a=1
   end
 
   def create

@@ -272,7 +272,8 @@ RSpec.describe User, type: :model do
 
   describe "#subscribe" do
     let(:user) { create(:user) }
-    let(:question) { create(:question) }
+    let!(:question) { create(:question) }
+    let!(:users) { create_list(:user, 3) }
 
     scenario 'change subscriptions' do
       expect { user.subscribe(question) }.to change(Subscription, :count).by(1)
@@ -285,6 +286,10 @@ RSpec.describe User, type: :model do
 
     scenario 'return subscription object' do
       expect(user.subscribe(question)).to be_a(Subscription)
+    end
+
+    scenario "several users can subscribe to the question" do
+      expect { users.each {|user| user.subscribe(question) } }.to change(Subscription, :count).by(3)
     end
   end
 

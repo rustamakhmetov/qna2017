@@ -22,7 +22,7 @@ class User < ApplicationRecord
   end
 
   def subscribe(model)
-    model.subscriptions.first_or_create(user: self)
+    model.subscriptions.find_or_create_by(user: self)
   end
 
   def unsubscribe(model)

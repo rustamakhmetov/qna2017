@@ -31,4 +31,13 @@ describe Question do
       question.update(body: "new body")
     end
   end
+
+  describe "subscription is created" do
+    let(:question) { build(:question) }
+
+    scenario "when you save a new question" do
+      expect(question.user).to receive(:subscribe).with(question).and_call_original
+      question.save
+    end
+  end
 end

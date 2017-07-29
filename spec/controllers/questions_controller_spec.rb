@@ -89,11 +89,19 @@ RSpec.describe QuestionsController, type: :controller do
         post :create, params: { question: attributes_for(:question) }
         expect(response).to redirect_to question_path(assigns(:question))
       end
+
+      it 'subscription change to +1' do
+        expect { post :create, params: { question: attributes_for(:question) } }.to change(Subscription, :count).by(1)
+      end
     end
 
     context 'with invalid attributes' do
       it 'does not save the question' do
         expect { post :create, params: { question: attributes_for(:invalid_question) }}.to_not change(Question, :count)
+      end
+
+      it 'subscription does not change' do
+        expect { post :create, params: { question: attributes_for(:invalid_question) } }.to_not change(Subscription, :count)
       end
 
       it 're-renders new view' do
@@ -178,6 +186,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it 'change to up +1 subscriptions' do
+        question
         expect { patch :subscribe, params: {id: question, format: :js} }.to change(Subscription, :count).by(1)
       end
 

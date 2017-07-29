@@ -12,6 +12,7 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :attachments, reject_if: :all_blank
 
   after_update :update_question
+  after_create :subscribe_question, if: :persisted?
 
   def self.digest
     Question.all.where("created_at >= ?", Time.zone.now.beginning_of_day)
@@ -21,5 +22,9 @@ class Question < ApplicationRecord
 
   def update_question
     NotifySubscribersJob.perform_later(self)
+  end
+
+  def subscribe_question
+    self.user.subscribe(self)
   end
 end
