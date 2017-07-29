@@ -5,7 +5,7 @@ class NotifySubscribersJob < ApplicationJob
     question = object.is_a?(Question) ? object : object.question
     question.subscriptions.find_each.each do |subscription|
       if object.is_a? Question
-        DailyMailer.notify_update_question(subscription.user, object).deliver_later
+        DailyMailer.notify_update_question(subscription.user, object).deliver_later unless subscription.user.author_of?(object)
       else
         DailyMailer.notify_new_answer(subscription.user, object).deliver_later
       end
