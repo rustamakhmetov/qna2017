@@ -38,21 +38,23 @@ describe Answer do
     end
   end
 
-  describe "send notify mail to author" do
-    let(:answer) { build(:answer) }
-
-    it 'with new answer' do
-      expect(NotifyNewAnswerJob).to receive(:perform_later).with(answer).and_call_original
-      answer.save
-    end
-  end
-
   describe "send notify mail to the subscribers user" do
-    let(:answer) { build(:answer) }
+    describe "valid attributes" do
+      let(:answer) { build(:answer) }
 
-    it 'with new answer' do
-      expect(NotifySubscribersJob).to receive(:perform_later).with(answer).and_call_original
-      answer.save
+      it 'with new answer' do
+        expect(NotifySubscribersJob).to receive(:perform_later).with(answer).and_call_original
+        answer.save
+      end
+    end
+
+    describe "invalid attributes" do
+      let(:answer) { build(:invalid_answer) }
+
+      it 'with new answer' do
+        expect(NotifySubscribersJob).to_not receive(:perform_later).with(answer).and_call_original
+        answer.save
+      end
     end
   end
 end

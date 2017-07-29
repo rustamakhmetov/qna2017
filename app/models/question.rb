@@ -12,7 +12,7 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :attachments, reject_if: :all_blank
 
   after_update :update_question
-  after_create :subscribe_question, if: :persisted?
+  after_create :subscribe_question
 
   def self.digest
     Question.all.where("created_at >= ?", Time.zone.now.beginning_of_day)
