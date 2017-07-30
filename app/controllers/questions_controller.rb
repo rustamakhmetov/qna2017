@@ -2,10 +2,12 @@ class QuestionsController < ApplicationController
   include Voted
 
   before_action :authenticate_user!, except: [:index, :show]
-  before_action :load_question, only: [:show, :edit, :update, :destroy]
+  before_action :load_question, only: [:show, :edit, :update, :destroy, :subscribe, :unsubscribe]
   after_action :publish_question, only: [:create]
 
   authorize_resource
+
+  respond_to :js
 
   def index
     respond_with(@questions = Question.all)
@@ -21,7 +23,6 @@ class QuestionsController < ApplicationController
   end
 
   def edit
-    a=1
   end
 
   def create
@@ -30,11 +31,27 @@ class QuestionsController < ApplicationController
 
   def update
     @question.update(question_params)
-    respond_with @question
+    respond_to do |format|
+      format.html do
+        if @question.errors.empty?
+          redirect_to(question_path(@question))
+        else
+          render :edit
+        end
+      end
+    end
   end
 
   def destroy
     respond_with @question.destroy!
+  end
+
+  def subscribe
+    respond_with(@subscription = current_user.subscribe(@question))
+  end
+
+  def unsubscribe
+    respond_with(current_user.unsubscribe(@question))
   end
 
   private

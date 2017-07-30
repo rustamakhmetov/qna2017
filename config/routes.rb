@@ -1,4 +1,10 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   use_doorkeeper
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
@@ -15,6 +21,8 @@ Rails.application.routes.draw do
       resources :comments, only: %i[create]
     end
     resources :comments, only: %i[create]
+    patch 'subscribe', on: :member
+    patch 'unsubscribe', on: :member
   end
 
   resources :attachments, only: [:destroy]

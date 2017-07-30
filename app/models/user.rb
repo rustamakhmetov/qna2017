@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
   has_many :authorizations, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable,
@@ -14,6 +15,18 @@ class User < ApplicationRecord
 
   def author_of?(model)
     model.user_id == id if model.respond_to?(:user_id)
+  end
+
+  def subscribe_of?(model)
+    model.subscriptions.exists?(user_id: self.id)
+  end
+
+  def subscribe(model)
+    model.subscriptions.find_or_create_by(user: self)
+  end
+
+  def unsubscribe(model)
+    model.subscriptions.where(user: self).destroy_all
   end
 
   def self.find_for_omniauth(auth)

@@ -1,0 +1,7 @@
+h1 Daily digest
+p view please questions for last 24h
+hr
+- @questions.each do |question|
+  ol
+    li
+      a href="#{question[:url]}" = question[:title]

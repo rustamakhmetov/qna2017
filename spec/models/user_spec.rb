@@ -4,6 +4,7 @@ RSpec.describe User, type: :model do
   it { should have_many(:questions).dependent(:destroy)}
   it { should have_many(:answers).dependent(:destroy)}
   it { should have_many(:authorizations).dependent(:destroy)}
+  it { should have_many(:subscriptions).dependent(:destroy)}
   it { should validate_presence_of :email}
   it { should validate_presence_of :password}
 
@@ -251,6 +252,54 @@ RSpec.describe User, type: :model do
         expect { user2.update_params(email: "new@weqwew.com") }.to_not change(User, :count)
       end
     end
+  end
 
+  describe "#subscribe_of?" do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    describe "from existing user" do
+      scenario "not exists subscription" do
+        expect(user.subscribe_of?(question)).to eq false
+      end
+
+      scenario "exists subscription" do
+        user.subscribe(question)
+        expect(user.subscribe_of?(question)).to eq true
+      end
+    end
+  end
+
+  describe "#subscribe" do
+    let(:user) { create(:user) }
+    let!(:question) { create(:question) }
+    let!(:users) { create_list(:user, 3) }
+
+    scenario 'change subscriptions' do
+      expect { user.subscribe(question) }.to change(Subscription, :count).by(1)
+    end
+
+    scenario 'double subscribe returns an existing subscription' do
+      subscription = user.subscribe(question)
+      expect(user.subscribe(question)).to eq subscription
+    end
+
+    scenario 'return subscription object' do
+      expect(user.subscribe(question)).to be_a(Subscription)
+    end
+
+    scenario "several users can subscribe to the question" do
+      expect { users.each {|user| user.subscribe(question) } }.to change(Subscription, :count).by(3)
+    end
+  end
+
+  describe "#unsubscribe" do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+
+    scenario 'change subscriptions' do
+      user.subscribe(question)
+      expect { user.unsubscribe(question) }.to change(Subscription, :count).by(-1)
+    end
   end
 end

@@ -31,3 +31,6 @@
 
 en:
   hello: "Hello world"
+  daily_mailer:
+    digest:
+      subject: 'New questions for last 24h'

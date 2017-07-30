@@ -57,3 +57,7 @@ bower.json
 
 # Ignore pow environment settings
 .powenv
+
+history.txt
+dump.rdb
+*.sh

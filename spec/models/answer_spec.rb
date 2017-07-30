@@ -37,4 +37,24 @@ describe Answer do
       end
     end
   end
+
+  describe "send notify mail to the subscribers user" do
+    describe "valid attributes" do
+      let(:answer) { build(:answer) }
+
+      it 'with new answer' do
+        expect(NotifySubscribersJob).to receive(:perform_later).with(answer).and_call_original
+        answer.save
+      end
+    end
+
+    describe "invalid attributes" do
+      let(:answer) { build(:invalid_answer) }
+
+      it 'with new answer' do
+        expect(NotifySubscribersJob).to_not receive(:perform_later).with(answer).and_call_original
+        answer.save
+      end
+    end
+  end
 end

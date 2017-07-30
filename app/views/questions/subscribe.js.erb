@@ -1,0 +1,6 @@
+<%= render 'layouts/flash_messages' %>
+
+<% if @subscription.errors.empty? %>
+  $(".subscribe").hide();
+  $(".unsubscribe").show();
+<% end %>
