@@ -302,4 +302,14 @@ RSpec.describe User, type: :model do
       expect { user.unsubscribe(question) }.to change(Subscription, :count).by(-1)
     end
   end
+
+  describe "#subscription_of" do
+    let(:user) { create(:user) }
+    let(:question) { create(:question) }
+    let!(:subscription) { user.subscribe(question) }
+
+    it "get user subscription of question" do
+      expect(user.subscription_of(question)).to eq subscription
+    end
+  end
 end

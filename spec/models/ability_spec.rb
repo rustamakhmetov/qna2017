@@ -23,10 +23,10 @@ describe Ability do
     let(:other_question) { create(:question, user: other_user) }
     let(:answer) { create(:answer, user: user) }
     let(:other_answer) { create(:answer, user: other_user) }
-    let(:subscription) { user.subscribe(question) }
+    let(:subscription1) { user.subscribe(question) }
+    let(:subscription2) { user.subscribe(other_question) }
     let(:other_subscription1) { other_user.subscribe(question) }
-    let(:other_subscription2) { user.subscribe(other_question) }
-    let(:other_subscription3) { other_user.subscribe(other_question) }
+    let(:other_subscription2) { other_user.subscribe(other_question) }
 
     it { should_not be_able_to :manage, :all }
     it { should be_able_to :read, :all }
@@ -72,10 +72,10 @@ describe Ability do
     it { should_not be_able_to :accept, create(:answer, question: question, accept: true) }
     it { should_not be_able_to :accept, create(:answer, question: other_question) }
 
-    it { should be_able_to :create, subscription }
-    it { should be_able_to :destroy, subscription }
+    it { should be_able_to :create, Subscription }
+    it { should be_able_to :destroy, subscription1 }
+    it { should be_able_to :destroy, subscription2 }
     it { should_not be_able_to :destroy, other_subscription1 }
     it { should_not be_able_to :destroy, other_subscription2 }
-    it { should_not be_able_to :destroy, other_subscription3 }
   end
 end

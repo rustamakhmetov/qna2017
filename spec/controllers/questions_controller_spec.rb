@@ -19,24 +19,37 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'GET #show' do
-    before { get :show, params: {id: question} }
+    describe "non-authenticate user" do
+      before { get :show, params: {id: question} }
 
-    it 'assigns the requested question to @question' do
-      expect(assigns(:question)).to eq question
+      it 'assigns the requested question to @question' do
+        expect(assigns(:question)).to eq question
+      end
+
+      it 'assigns the votes to @question.votes' do
+        user = create(:user)
+        vote = create(:vote, user: user, votable: question, value: 1)
+        expect(assigns(:question).votes).to eq [vote]
+      end
+
+      it 'build a new Attachment to @answer.attachments' do
+        expect(assigns(:answer).attachments.first).to be_a_new(Attachment)
+      end
+
+      it 'renders show view' do
+        expect(response).to render_template :show
+      end
     end
 
-    it 'assigns the votes to @question.votes' do
-      user = create(:user)
-      vote = create(:vote, user: user, votable: question, value: 1)
-      expect(assigns(:question).votes).to eq [vote]
-    end
+    describe "authenticate user" do
+      sign_in_user
 
-    it 'build a new Attachment to @answer.attachments' do
-      expect(assigns(:answer).attachments.first).to be_a_new(Attachment)
-    end
+      let!(:subscription) { @user.subscribe(question) }
+      before { get :show, params: {id: question} }
 
-    it 'renders show view' do
-      expect(response).to render_template :show
+      it 'assigns the subscription to @subscription' do
+        expect(assigns(:subscription)).to eq subscription
+      end
     end
   end
 
@@ -89,19 +102,11 @@ RSpec.describe QuestionsController, type: :controller do
         post :create, params: { question: attributes_for(:question) }
         expect(response).to redirect_to question_path(assigns(:question))
       end
-
-      it 'subscription change to +1' do
-        expect { post :create, params: { question: attributes_for(:question) } }.to change(Subscription, :count).by(1)
-      end
     end
 
     context 'with invalid attributes' do
       it 'does not save the question' do
         expect { post :create, params: { question: attributes_for(:invalid_question) }}.to_not change(Question, :count)
-      end
-
-      it 'subscription does not change' do
-        expect { post :create, params: { question: attributes_for(:invalid_question) } }.to_not change(Subscription, :count)
       end
 
       it 're-renders new view' do
@@ -174,48 +179,5 @@ RSpec.describe QuestionsController, type: :controller do
 
   it_behaves_like "voted" do
     let(:object) { question }
-  end
-
-  describe 'PATCH #subscribe' do
-    sign_in_user
-
-    context "User subscribe on question" do
-      it 'assigns the requested question to @question' do
-        patch :subscribe, params: {id: question, format: :js}
-        expect(assigns(:question)).to eq question
-      end
-
-      it 'change to up +1 subscriptions' do
-        question
-        expect { patch :subscribe, params: {id: question, format: :js} }.to change(Subscription, :count).by(1)
-      end
-
-      it 'render subscription to json' do
-        patch :subscribe, params: {id: question, format: :js}
-        expect(response).to be_success
-      end
-    end
-  end
-
-  describe 'PATCH #unsubscribe' do
-    sign_in_user
-
-    before { @user.subscribe(question) }
-
-    context "User unsubscribe on question" do
-      it 'assigns the requested question to @question' do
-        patch :unsubscribe, params: {id: question, format: :js}
-        expect(assigns(:question)).to eq question
-      end
-
-      it 'change to up -1 subscriptions' do
-        expect { patch :unsubscribe, params: {id: question, format: :js} }.to change(Subscription, :count).by(-1)
-      end
-
-      it 'render subscription to json' do
-        patch :unsubscribe, params: {id: question, format: :js}
-        expect(response).to be_success
-      end
-    end
   end
 end

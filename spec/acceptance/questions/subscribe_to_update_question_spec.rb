@@ -30,6 +30,7 @@ feature 'Subscribe to update question', %q{
           within '.question' do
             expect(page).to_not have_link('Subscribe')
             click_on 'Unsubscribe'
+            wait_for_ajax
             expect(page).to_not have_link('Unsubscribe')
             expect(page).to have_link("Subscribe")
           end
@@ -56,6 +57,7 @@ feature 'Subscribe to update question', %q{
           within '.question' do
             expect(page).to_not have_link('Unsubscribe')
             click_on 'Subscribe'
+            wait_for_ajax
             expect(page).to_not have_link('Subscribe')
             expect(page).to have_link("Unsubscribe")
           end
@@ -86,6 +88,7 @@ feature 'Subscribe to update question', %q{
           within '.question' do
             expect(page).to_not have_link('Subscribe')
             click_on 'Unsubscribe'
+            wait_for_ajax
             expect(page).to_not have_link('Unsubscribe')
             expect(page).to have_link("Subscribe")
           end
