@@ -61,3 +61,5 @@ bower.json
 history.txt
 dump.rdb
 *.sh
+config/*.sphinx.conf
+db/sphinx
