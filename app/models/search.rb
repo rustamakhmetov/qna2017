@@ -6,7 +6,7 @@ class Search
   def self.by_condition(condition, query)
     query = ThinkingSphinx::Query.escape(query)
     singular = condition.singularize
-    @klass = singular.constantize
-    { singular.downcase => @klass.search(query) || [] }
+    @klasses = [singular.constantize] rescue [Question, Answer, Comment, User]
+    @klasses.map {|klass| { klass.to_s.downcase => klass.search(query) || [] }}
   end
 end

@@ -7,9 +7,10 @@ feature 'Search users', %q{
 } do
 
   it_behaves_like "Searchable" do
-    let!(:objects) { create_list(:user, 10) }
-    let(:model) { "Users" }
-    let(:attr) { :email }
-    let(:query) { "user*" }
+    let(:condition) { "Users" }
+    let(:query) { "text*" }
+    let!(:datas) { [
+        {model: "Users", attr: :email, objects: 10.times.map {|i| create(:user, email: "user#{i}@text.com")}}
+    ]}
   end
 end

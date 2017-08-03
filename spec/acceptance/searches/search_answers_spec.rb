@@ -7,9 +7,10 @@ feature 'Search answers', %q{
 } do
 
   it_behaves_like "Searchable" do
-    let!(:objects) { create_list(:answer, 10) }
-    let(:model) { "Answers" }
-    let(:attr) { :body }
+    let(:condition) { "Answers" }
     let(:query) { "body" }
+    let!(:datas) { [
+        {model: "Answers", attr: :body, objects: create_list(:answer, 10)},
+    ]}
   end
 end

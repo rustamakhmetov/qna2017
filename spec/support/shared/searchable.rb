@@ -5,13 +5,15 @@ shared_examples_for "Searchable" do
       visit questions_path
       within '.search' do
         fill_in 'query', with: query
-        select model, from: :condition
+        select condition, from: :condition
         click_on 'Search'
         wait_for_ajax
       end
-      within ".search-results > .#{model.downcase}" do
-        objects.each do |object|
-          expect(page).to have_content object.send(attr)
+      datas.each do |data|
+        within ".search-results > .#{data[:model].downcase}" do
+          data[:objects].each do |object|
+            expect(page).to have_content object.send(data[:attr])
+          end
         end
       end
     end

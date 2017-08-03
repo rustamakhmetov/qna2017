@@ -7,10 +7,11 @@ feature 'Search comments', %q{
 } do
 
   it_behaves_like "Searchable" do
-    let(:question) { create(:question) }
-    let!(:objects) { create_list(:comment, 10, commentable: question, commentable_type: "Question") }
-    let(:model) { "Comments" }
-    let(:attr) { :body }
+    let(:condition) { "Comments" }
     let(:query) { "comment" }
+    let!(:datas) { [
+        {model: "Comments", attr: :body, objects: create_list(:comment, 10, commentable: create(:question),
+                                                              commentable_type: "Question")},
+    ]}
   end
 end
