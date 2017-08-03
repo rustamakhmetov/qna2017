@@ -1,0 +1,7 @@
+.search
+  = form_tag(search_path, method: :get) do
+    = text_field_tag :query, params[:query]
+    = select_tag :condition,
+            options_for_select(Search.conditions,
+                    params[:condition] || Search.conditions.first)
+    = submit_tag 'Search', name: nil

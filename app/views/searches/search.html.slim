@@ -1,0 +1,8 @@
+.search-results
+  .questions
+    h3
+      | Найдено #{@questions.count} вопросов
+    ol
+      -@questions.each do |question|
+        li
+          =link_to question.title, question_path(question)
