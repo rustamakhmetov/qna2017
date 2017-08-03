@@ -5,6 +5,6 @@ class SearchesController < ApplicationController
 
   def search
     @query = params[:query]
-    @questions = Search.by_condition(params[:condition], @query)
+    @results = Search.by_condition(params[:condition], @query)
   end
 end

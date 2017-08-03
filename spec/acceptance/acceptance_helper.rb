@@ -27,7 +27,7 @@ RSpec.configure do |config|
 
   config.before(:each, :sphinx => true) do
     # For tests tagged with Sphinx, use deletion (or truncation)
-    DatabaseCleaner.strategy = :deletion
+    DatabaseCleaner.strategy = :truncation
   end
 
   config.before(:each) do

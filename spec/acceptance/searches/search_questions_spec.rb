@@ -17,7 +17,6 @@ feature 'Search questions', %q{
         within '.search' do
           fill_in 'query', with: 'question'
           select 'Questions', from: :condition
-          #save_and_open_page
           click_on 'Search'
           wait_for_ajax
         end

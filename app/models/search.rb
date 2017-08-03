@@ -1,10 +1,11 @@
 class Search
   def self.conditions
-    %w{Any Questions Answer Comments Users}
+    %w{Any Questions Answers Comments Users}
   end
 
   def self.by_condition(condition, query)
-    @klass = condition.singularize.constantize
-    @klass.search(query) || []
+    singular = condition.singularize
+    @klass = singular.constantize
+    { singular.downcase => @klass.search(query) || [] }
   end
 end
