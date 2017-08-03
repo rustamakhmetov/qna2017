@@ -8,7 +8,10 @@ require 'rspec/rails'
 require 'capybara/email/rspec'
 require 'cancan/matchers'
 require 'sidekiq/testing'
+require 'thinking_sphinx/test'
 
+ENV['PATH'] += ':/home/linuxbrew/.linuxbrew/bin'
+ThinkingSphinx::Test.init
 Sidekiq::Testing.fake!
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -49,6 +52,26 @@ RSpec.configure do |config|
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = true
+
+  config.before :each do |example|
+    # Configure and start Sphinx for request specs
+    if example.metadata[:type] == :request
+      ThinkingSphinx::Test.init
+      ThinkingSphinx::Test.start index: false
+    end
+
+    # Disable real-time callbacks if Sphinx isn't running
+    ThinkingSphinx::Configuration.instance.settings['real_time_callbacks'] =
+        (example.metadata[:type] == :request)
+  end
+
+  config.after(:each) do |example|
+    # Stop Sphinx and clear out data after request specs
+    if example.metadata[:type] == :request
+      ThinkingSphinx::Test.stop
+      ThinkingSphinx::Test.clear
+    end
+  end
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
