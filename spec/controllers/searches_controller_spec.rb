@@ -7,7 +7,7 @@ RSpec.describe SearchesController, type: :controller do
     subject { get :search, params: { query: query, condition: "Questions", format: :js } }
 
     it 'call search' do
-      expect(Question).to receive(:search).with(query)
+      expect(Search).to receive(:by_condition).with("Questions", query)
       subject
     end
   end

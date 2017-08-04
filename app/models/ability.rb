@@ -34,7 +34,7 @@ class Ability
     can :manage, Authorization
     can :create, Subscription
     can :destroy, Subscription do |subscription|
-      @user == subscription.user
+      @user.author_of? subscription
     end
   end
 

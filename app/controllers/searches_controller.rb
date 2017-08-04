@@ -4,7 +4,7 @@ class SearchesController < ApplicationController
   respond_to :js
 
   def search
-    @query = params[:query]
-    @results = Search.by_condition(params[:condition], @query)
+    query = params[:query]
+    @results = Search.by_condition(params[:condition], query)
   end
 end

@@ -9,10 +9,10 @@ shared_examples_for "Searchable" do
         click_on 'Search'
         wait_for_ajax
       end
-      datas.each do |data|
-        within ".search-results > .#{data[:model].downcase}" do
-          data[:objects].each do |object|
-            expect(page).to have_content object.send(data[:attr])
+      data.each do |value|
+        within ".search-results" do
+          value[:objects].each do |object|
+            expect(page).to have_content object.send(value[:attr])
           end
         end
       end

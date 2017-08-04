@@ -1,13 +1,8 @@
 .search-results
-  -@results.each do |result|
-    -result.each do |klass, values|
-      div class="#{klass}s"
-        h3
-          | Found #{values.count} #{klass}s
-        ol
-          -values.each do |value|
-            li
-              -if ['question', 'answer', 'comment'].include? klass
-                =link_to value.respond_to?(:title) ? value.title : value.body.truncate(15), question_path(value)
-              -else
-                =link_to value.email, user_path(value)
+  -if @results
+    -@results.each do |value|
+      li
+        - if [Question, Answer, Comment].include? value.class
+          = link_to value.respond_to?(:title) ? value.title : value.body.truncate(15), question_path(value)
+        - else
+          = link_to value.email, user_path(value)
