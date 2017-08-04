@@ -32,8 +32,10 @@ class Ability
       @user.author_of?(attach.attachable)
     end
     can :manage, Authorization
-    can :subscribe, Question
-    can :unsubscribe, Question
+    can :create, Subscription
+    can :destroy, Subscription do |subscription|
+      @user.author_of? subscription
+    end
   end
 
   def admin_abilities

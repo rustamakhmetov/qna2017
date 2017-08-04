@@ -1,0 +1,4 @@
+test:
+  mysql41: 9307
+  enable_star: true
+  min_prefix_len: 3

@@ -41,14 +41,8 @@ div class="question" id="question#{@question.id}"
     -if can?(:destroy, @question)
       p
         = link_to 'Delete question', @question, method: :delete
-  -if can?(:subscribe, @question)
-    p
-      - @subscribe = current_user.subscribe_of?(@question)
-      = link_to 'Unsubscribe', unsubscribe_question_path, class: "unsubscribe", method: :patch, remote: true,
-              style: (@subscribe ? '' : 'display:none')
-      = link_to 'Subscribe', subscribe_question_path, class: "subscribe", method: :patch, remote: true,
-              style: (@subscribe ? 'display:none' : '')
 
+  =render @subscription
   =render "comments/form", object: @question
 
 .answers

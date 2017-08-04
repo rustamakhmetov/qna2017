@@ -8,7 +8,10 @@ require 'rspec/rails'
 require 'capybara/email/rspec'
 require 'cancan/matchers'
 require 'sidekiq/testing'
+require 'thinking_sphinx/test'
 
+ENV['PATH'] += ':/home/linuxbrew/.linuxbrew/bin'
+ThinkingSphinx::Test.init
 Sidekiq::Testing.fake!
 # Add additional requires below this line. Rails is not loaded until this point!
 

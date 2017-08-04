@@ -1,0 +1,5 @@
+<%= render 'layouts/flash_messages' %>
+
+<% if @subscription.errors.empty? %>
+  $(".subscription").html('<%= j render @subscription %>');
+<% end %>

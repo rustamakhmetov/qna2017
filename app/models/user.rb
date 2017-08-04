@@ -29,6 +29,10 @@ class User < ApplicationRecord
     model.subscriptions.where(user: self).destroy_all
   end
 
+  def subscription_of(model)
+    model.subscriptions.where(user: self).first
+  end
+
   def self.find_for_omniauth(auth)
     authorization = Authorization.where(provider: auth.provider, uid: auth.uid).first
     return authorization.user if authorization

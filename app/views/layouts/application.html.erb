@@ -20,7 +20,9 @@
              <li><%= link_to 'Log in', new_user_session_path  %></li>
          <% end %>
     <% end %>
-  
+
+    <%= render "searches/form" %>
+
     <%= yield %>
   </body>
 </html>
