@@ -5,10 +5,10 @@ class Search
     query = ThinkingSphinx::Query.escape(query)
     if CONDITIONS.include?(condition) && condition!="Any"
       singular = condition.singularize
-      @klasses = [singular.constantize]
+      klasses = [singular.constantize]
     else
-      @klasses = [Question, Answer, Comment, User]
+      klasses = [Question, Answer, Comment, User]
     end
-    ThinkingSphinx.search query, :classes => @klasses
+    ThinkingSphinx.search query, :classes => klasses
   end
 end
