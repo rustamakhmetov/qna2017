@@ -90,4 +90,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.action_cable.allowed_request_origins = ["http://212.237.37.163"]
+
+  config.action_mailer.default_url_options = { host: '212.237.37.163' }
+  config.x.active_job.default_url_options = { host: "212.237.37.163" }
 end
