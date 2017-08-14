@@ -9,7 +9,7 @@ feature "User can write an answer to a question", %q{
   given(:user) { create(:user) }
   given(:question) { create(:question) }
 
-  scenario 'Authenticated user answer to question', js: true do
+  fscenario 'Authenticated user answer to question', js: true do
     sign_in(user)
 
     visit question_path(question)
