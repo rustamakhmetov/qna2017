@@ -1,6 +1,7 @@
-div id="attachment#{attachment.id}"
-  li
-    = link_to attachment.file.identifier, attachment.file.url
-    - if can?(:destroy, attachment.attachable)
-      '
-      = link_to 'remove file', attachment, method: :delete, remote: true
+-cache attachment do
+  div id="attachment#{attachment.id}"
+    li
+      = link_to attachment.file.identifier, attachment.file.url
+      - if can?(:destroy, attachment.attachable)
+        '
+        = link_to 'remove file', attachment, method: :delete, remote: true
