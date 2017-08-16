@@ -1,31 +1,32 @@
 - if answer.persisted?
-  div id="answer#{answer.id}"
-    - if answer.accept
-      span.accept
-    p
-      | [#{answer.id}] #{answer.body}
-    =render "questions/vote", object: answer
-
-    =render "comments/form", object: answer
-
-    p
-      #answer_attachments
-        h5 Attachments:
-        = render answer.attachments
-
-    - if can?(:update, answer)
-      = form_for answer, method: :patch, remote: true do |f|
-        = render 'shared/form_error', object: f.object
-        p
-          = f.label :body
-          = f.text_area :body
-        p
-          = f.submit 'Save'
+  -cache answer do
+    div id="answer#{answer.id}"
+      - if answer.accept
+        span.accept
       p
-        = link_to "Edit", '', class: "edit-answer-link", data: {answer_id: answer.id}
-        | &nbsp;
-        = link_to "Delete", answer, method: :delete, remote: true
-    - if can?(:accept, answer)
+        | [#{answer.id}] #{answer.body}
+      =render "questions/vote", object: answer
+
+      =render "comments/form", object: answer
+
       p
-        | &nbsp;
-        = link_to "Accept", accept_answer_path(answer), class: "accept-answer-link", remote: true, method: :patch
+        #answer_attachments
+          h5 Attachments:
+          = render answer.attachments
+
+      - if can?(:update, answer)
+        = form_for answer, method: :patch, remote: true do |f|
+          = render 'shared/form_error', object: f.object
+          p
+            = f.label :body
+            = f.text_area :body
+          p
+            = f.submit 'Save'
+        p
+          = link_to "Edit", '', class: "edit-answer-link", data: {answer_id: answer.id}
+          | &nbsp;
+          = link_to "Delete", answer, method: :delete, remote: true
+      - if can?(:accept, answer)
+        p
+          | &nbsp;
+          = link_to "Accept", accept_answer_path(answer), class: "accept-answer-link", remote: true, method: :patch

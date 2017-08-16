@@ -64,6 +64,7 @@ gem 'thinking-sphinx'
 gem 'dotenv'
 gem 'dotenv-deployment', require: 'dotenv/deployment'
 gem 'unicorn'
+gem 'redis-rails'
 
 group :development, :test do
   gem 'rspec-rails'

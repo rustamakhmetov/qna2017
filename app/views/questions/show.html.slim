@@ -1,67 +1,68 @@
-javascript:
-  var question_id;
-  $(document).ajaxError(function (e, xhr, settings) {
-      if (xhr.status == 401) {
-          $('#flash_messages').html(xhr.responseText);
-      }
-  });
-  $(document).ready(function(){
-    question_id = #{@question.id};
-  });
+- cache @question do
+  javascript:
+    var question_id;
+    $(document).ajaxError(function (e, xhr, settings) {
+        if (xhr.status == 401) {
+            $('#flash_messages').html(xhr.responseText);
+        }
+    });
+    $(document).ready(function(){
+      question_id = #{@question.id};
+    });
 
 
-div class="question" id="question#{@question.id}"
-  p
-    ' Title:
-    = @question.title
-
-  p
-    ' Body:
-    = @question.body
-
-  p
-    #attachments1
-      h4 Attachments:
-      = render @question.attachments
-  =render "questions/vote", object: @question
-
-  -if can?(:update, @question)
-    =form_for @question, html: {id: "edit_question_#{@question.id}"}, remote: true do |f|
-      = render 'shared/form_error', object: f.object
-      p
-        =f.label :title
-        =f.text_field :title
-      p
-        =f.label :body
-        =f.text_area :body
-      p
-        =f.submit "Save"
+  div class="question" id="question#{@question.id}"
     p
-      = link_to 'Edit', '', class: "edit-question-link", data: {question_id: @question.id}
-    -if can?(:destroy, @question)
-      p
-        = link_to 'Delete question', @question, method: :delete
+      ' Title:
+      = @question.title
 
-  =render @subscription
-  =render "comments/form", object: @question
-
-.answers
-  p
-    h3 Answers:
-    = render @question.answers
-
-= form_for [@question, @answer], remote: true do |f|
-  = render 'shared/form_error', object: f.object
-  p
-    =f.label :body
-    =f.text_area :body
-  p
-    h5 Attachments:
-    #attachments
-      = f.fields_for :attachments, @answer.attachments.build do |attachment|
-        = render 'attachment_fields', f: attachment
-        .links
-          = link_to_add_association 'add file', f, :attachments
-  -if can?(:create, Answer)
     p
-      =f.submit 'Ask answer'
+      ' Body:
+      = @question.body
+
+    p
+      #attachments1
+        h4 Attachments:
+        = render @question.attachments
+    =render "questions/vote", object: @question
+
+    -if can?(:update, @question)
+      =form_for @question, html: {id: "edit_question_#{@question.id}"}, remote: true do |f|
+        = render 'shared/form_error', object: f.object
+        p
+          =f.label :title
+          =f.text_field :title
+        p
+          =f.label :body
+          =f.text_area :body
+        p
+          =f.submit "Save"
+      p
+        = link_to 'Edit', '', class: "edit-question-link", data: {question_id: @question.id}
+      -if can?(:destroy, @question)
+        p
+          = link_to 'Delete question', @question, method: :delete
+
+    =render @subscription
+    =render "comments/form", object: @question
+
+  .answers
+    p
+      h3 Answers:
+      = render @question.answers
+
+  = form_for [@question, @answer], remote: true do |f|
+    = render 'shared/form_error', object: f.object
+    p
+      =f.label :body
+      =f.text_area :body
+    p
+      h5 Attachments:
+      #attachments
+        = f.fields_for :attachments, @answer.attachments.build do |attachment|
+          = render 'attachment_fields', f: attachment
+          .links
+            = link_to_add_association 'add file', f, :attachments
+    -if can?(:create, Answer)
+      p
+        =f.submit 'Ask answer'
